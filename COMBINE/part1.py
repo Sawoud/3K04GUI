@@ -8,6 +8,8 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from database import DataBase
 import os
+from part2 import *
+
 import os.path
 import shutil
 
@@ -90,7 +92,7 @@ class LoginWindow(Screen):
         if db.validate(self.email.text, self.password.text):
             MainWindow.current = self.email.text
             self.reset()
-            sm.current = "main"
+            main(self.email.text)
         else:
             invalidLogin()
     def deleteBtn(self):
@@ -107,6 +109,7 @@ class LoginWindow(Screen):
 
 
 class MainWindow(Screen):
+    print("MainWindow")
     n = ObjectProperty(None)
     created = ObjectProperty(None)
     email = ObjectProperty(None)
@@ -116,10 +119,7 @@ class MainWindow(Screen):
         sm.current = "login"
 
     def on_enter(self, *args):
-        password, name, created = db.get_user(self.current)
-        self.n.text = "Account Name: " + name
-        self.email.text = "Email: " + self.current
-        self.created.text = "Created On: " + created
+        print("on_enter")
 
 
 class WindowManager(ScreenManager):
@@ -153,7 +153,7 @@ kv = Builder.load_file("my.kv")
 sm = WindowManager()
 db = DataBase("users.txt")
 
-screens = [WelcomeWindow(name="welcome"),LoginWindow(name="login"), CreateAccountWindow(name="create"), DeleteAccountWindow(name="delete"),MainWindow(name="main")]
+screens = [WelcomeWindow(name="welcome"),LoginWindow(name="login"), CreateAccountWindow(name="create"), DeleteAccountWindow(name="delete")]
 for screen in screens:
     sm.add_widget(screen)
 

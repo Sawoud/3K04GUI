@@ -365,4 +365,4 @@ def main(dank):
     print(dank)
     MyApp().run()
 
-main("hellloMAIN")
+#main("hellloMAIN")
