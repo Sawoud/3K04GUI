@@ -92,6 +92,7 @@ class LoginWindow(Screen):
         if db.validate(self.email.text, self.password.text):
             MainWindow.current = self.email.text
             self.reset()
+            App.get_running_app().stop()
             main(self.email.text)
         else:
             invalidLogin()
