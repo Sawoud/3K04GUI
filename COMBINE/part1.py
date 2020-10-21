@@ -29,14 +29,18 @@ class CreateAccountWindow(Screen):
                     except:
                         print("This user's folder has already been created")
 
-                    with open(os.path.join(x,"Mode1.txt"), "a") as fileopened:
-                        fileopened.write(self.namee.text+"\n"+"mode1")
-                    with open(os.path.join(x,"Mode2.txt"), "a") as fileopened1:
-                        fileopened1.write(self.namee.text+"\n"+"mode2")
-                    with open(os.path.join(x,"Mode3.txt"), "a") as fileopened2:
-                        fileopened2.write(self.namee.text+"\n"+"mode3")
-                    with open(os.path.join(x,"Mode4.txt"), "a") as fileopened3:
-                        fileopened3.write(self.namee.text+"\n"+"mode4")
+                    AOOstring="Lower Rate Limit()\nUpper Rate Limit()\nAtrial Amplitude()\nArtial Pulse Width()\nArtial Sensitivity()\nARP()\nPVARP()\nHysteresis()\nRate Smoothing()\n"
+                    AAIstring="Lower Rate Limit()\nUpper Rate Limit()\nAtrial Amplitude()\nArtial Pulse Width()\nArtial Sensitivity()\nARP()\nPVARP()\n"
+                    VVIstring="Lower Rate Limit()\nUpper Rate Limit()\nVentricular Amplitude()\nVentricular Pulse Width()\n"
+                    VOOstring="Lower Rate Limit()\nUpper Rate Limit()\nVentricular Amplitude()\nVentricular Pulse Width()\n"
+                    with open(os.path.join(x,"AAI.txt"), "a") as fileopened:
+                        fileopened.write(AAIstring)
+                    with open(os.path.join(x,"AOO.txt"), "a") as fileopened1:
+                        fileopened1.write(AOOstring)
+                    with open(os.path.join(x,"VVI.txt"), "a") as fileopened2:
+                        fileopened2.write(VVIstring)
+                    with open(os.path.join(x,"VOO.txt"), "a") as fileopened3:
+                        fileopened3.write(VOOstring)
                     self.reset()
                     sm.current = "login"
 
