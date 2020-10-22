@@ -9,12 +9,36 @@ from functools import partial
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.popup import Popup
 import os.path
+import serial
+
+
 # still have to do the displaying numbers onto the screen
 var2 = 0
 
-connection = 1
+connection = 0
+
+
+def Connect():
+    global connection
+    ser = serial
+    com = "COM4"
+    try:
+      ser = serial.Serial(com, 9600, timeout=1)
+
+      while ser.read():
+        connection = 0
+
+      connection = 1
+      ser.close()
+
+    except serial.serialutil.SerialException:
+      connection = 0
+
+
+
 
 class MyGrid(GridLayout):
+
     def AddButtons(self,x):
         if(x != 1):
             self.aoo = Button(text = "AOO")
@@ -78,6 +102,7 @@ class MyGrid(GridLayout):
         self.clear_widgets()
         self.AddButtons(1)
 #        self.Popup(var)
+        Connect()
 ###############################################
 
         self.cols = 3
@@ -144,6 +169,8 @@ class MyGrid(GridLayout):
         var = "VOO"
         self.clear_widgets()
         self.AddButtons(2)
+        Connect()
+
 ###############################################
         self.cols = 3
 
@@ -192,6 +219,8 @@ class MyGrid(GridLayout):
         var = "AAI"
         self.clear_widgets()
         self.AddButtons(3)
+        Connect()
+
 ###############################################
         self.cols = 3
         self.add_widget(Label(text="Lower Rate Limit"))
@@ -275,6 +304,8 @@ class MyGrid(GridLayout):
         var = "VVI"
         self.clear_widgets()
         self.AddButtons(4)
+        Connect()
+
 ###############################################
         self.cols = 3
         var2 = 4
