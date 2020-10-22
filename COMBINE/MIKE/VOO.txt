@@ -1,4 +1,0 @@
-Lower Rate Limit(123)
-Upper Rate Limit(123)
-Ventricular Amplitude(123)
-Ventricular Pulse Width(123)
