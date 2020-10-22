@@ -1,0 +1,7 @@
+Lower Rate Limit(654)
+Upper Rate Limit(123)
+Atrial Amplitude(123)
+Artial Pulse Width(123)
+Artial Sensitivity(123)
+ARP(123)
+PVARP(123)

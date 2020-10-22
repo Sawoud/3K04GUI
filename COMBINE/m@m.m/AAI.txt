@@ -1,0 +1,7 @@
+Lower Rate Limit()
+Upper Rate Limit()
+Atrial Amplitude()
+Artial Pulse Width()
+Artial Sensitivity()
+ARP()
+PVARP()
