@@ -36,7 +36,8 @@ class MyGrid(GridLayout):
 
 
     def Popup(self,var,temp):
-        str = user + '\\' + var +'.txt'
+        str = user + "\\" + var +'.txt'
+        print(str)
         f = open(str,"r")
         popup = Popup(title=var+" Parameters",
         content=Label(text=f.read()),
@@ -359,10 +360,11 @@ class MyApp(App):
     def build(self):
         return MyGrid()
 
-user = "MIKE"
-def main(dank):
+user = ""
+def main(info):
     global user
-    print(dank)
+    user = info
+    print("this is",info)
     MyApp().run()
 
 #main("hellloMAIN")

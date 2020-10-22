@@ -95,9 +95,10 @@ class LoginWindow(Screen):
     def loginBtn(self):
         if db.validate(self.email.text, self.password.text):
             MainWindow.current = self.email.text
-            self.reset()
             App.get_running_app().stop()
             main(self.email.text)
+            self.reset()
+
         else:
             invalidLogin()
     def deleteBtn(self):
