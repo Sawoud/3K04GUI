@@ -359,9 +359,10 @@ class MyApp(App):
     def build(self):
         return MyGrid()
 
-user = "MIKE"
+
 def main(dank):
     global user
+    user=dank
     print(dank)
     MyApp().run()
 
