@@ -129,7 +129,7 @@ class MyGrid(GridLayout):
         self.submit7.bind(on_press = partial(self.pressed,self.name7,var,'PVARP'))
         self.add_widget(self.submit7)
 
-        self.add_widget(Label(text="Show Parameters Values"))
+        self.add_widget(Label(text="Show "+var+" Parameters Values"))
         self.submit8 = Button(text = "Values",font_size = 30)
         self.submit8.bind(on_press = partial(self.Popup,var))
         self.add_widget(self.submit8)
@@ -175,7 +175,7 @@ class MyGrid(GridLayout):
         self.submit4.bind(on_press = partial(self.pressed,self.name4,var,'Ventricular Pulse Width'))
         self.add_widget(self.submit4)
 
-        self.add_widget(Label(text="Show Parameters Values"))
+        self.add_widget(Label(text="Show "+var+" Parameters Values"))
         self.submit5 = Button(text = "Values",font_size = 30)
         self.submit5.bind(on_press = partial(self.Popup,var))
         self.add_widget(self.submit5)
@@ -190,7 +190,7 @@ class MyGrid(GridLayout):
 ####################################################
         var = "AAI"
         self.clear_widgets()
-        self.AddButtons(2)
+        self.AddButtons(3)
 ###############################################
         self.cols = 3
         self.add_widget(Label(text="Lower Rate Limit"))
@@ -257,7 +257,7 @@ class MyGrid(GridLayout):
         self.submit9.bind(on_press = partial(self.pressed,self.name9,var,'Rate Smoothing'))
         self.add_widget(self.submit9)
 
-        self.add_widget(Label(text="Show Parameters Values"))
+        self.add_widget(Label(text="Show "+var+" Parameters Values"))
         self.submit10 = Button(text = "Values",font_size = 30)
         self.submit10.bind(on_press = partial(self.Popup,var))
         self.add_widget(self.submit10)
@@ -273,7 +273,7 @@ class MyGrid(GridLayout):
 ####################################################
         var = "VVI"
         self.clear_widgets()
-        self.AddButtons(2)
+        self.AddButtons(4)
 ###############################################
         self.cols = 3
         var2 = 4
@@ -305,7 +305,7 @@ class MyGrid(GridLayout):
         self.submit4.bind(on_press = partial(self.pressed,self.name4,var,'Ventricular Pulse Width'))
         self.add_widget(self.submit4)
 
-        self.add_widget(Label(text="Show Parameters Values"))
+        self.add_widget(Label(text="Show "+var+" Parameters Values"))
         self.submit5 = Button(text = "Values",font_size = 30)
         self.submit5.bind(on_press = partial(self.Popup,var))
         self.add_widget(self.submit5)
