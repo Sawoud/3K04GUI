@@ -29,8 +29,8 @@ class CreateAccountWindow(Screen):
                     except:
                         print("This user's folder has already been created")
 
-                    AAIstring="Lower Rate Limit()\nUpper Rate Limit()\nAtrial Amplitude()\nArtial Pulse Width()\nArtial Sensitivity()\nARP()\nPVARP()\nHysteresis()\nRate Smoothing()\n"
-                    AOOstring="Lower Rate Limit()\nUpper Rate Limit()\nAtrial Amplitude()\nArtial Pulse Width()\nArtial Sensitivity()\nARP()\nPVARP()\n"
+                    AOOstring="Lower Rate Limit()\nUpper Rate Limit()\nAtrial Amplitude()\nArtial Pulse Width()\nArtial Sensitivity()\nARP()\nPVARP()\nHysteresis()\nRate Smoothing()\n"
+                    AAIstring="Lower Rate Limit()\nUpper Rate Limit()\nAtrial Amplitude()\nArtial Pulse Width()\nArtial Sensitivity()\nARP()\nPVARP()\n"
                     VVIstring="Lower Rate Limit()\nUpper Rate Limit()\nVentricular Amplitude()\nVentricular Pulse Width()\n"
                     VOOstring="Lower Rate Limit()\nUpper Rate Limit()\nVentricular Amplitude()\nVentricular Pulse Width()\n"
                     with open(os.path.join(x,"AAI.txt"), "a") as fileopened:
@@ -95,12 +95,10 @@ class LoginWindow(Screen):
     def loginBtn(self):
         if db.validate(self.email.text, self.password.text):
             MainWindow.current = self.email.text
-            user=self.email.text
-            self.reset()
-            print("before app closes:"+user)
             App.get_running_app().stop()
-            print("after app closes"+user)
-            main(user)
+            main(self.email.text)
+            self.reset()
+
         else:
             invalidLogin()
     def deleteBtn(self):
