@@ -18,12 +18,12 @@ var2 = 0
 connection = 0
 
 
-def Connect():
+def Connect(): # function that deermines if the pace maker is connected or not
     global connection
     ser = serial
     com = "COM4"
     try:
-      ser = serial.Serial(com, 9600, timeout=1)
+      ser = serial.Serial(com, 9600, timeout=1) # the fn. waits for 1 second, if it cant find a connection it determines its not connected
 
       while ser.read():
         connection = 0
@@ -39,7 +39,7 @@ def Connect():
 
 class MyGrid(GridLayout):
 
-    def AddButtons(self,x):
+    def AddButtons(self,x): # this function determines what buttons have to be added
         if(x != 1):
             self.aoo = Button(text = "AOO")
             self.aoo.bind(on_press=self.AOO)
@@ -59,7 +59,7 @@ class MyGrid(GridLayout):
             self.add_widget(self.vvi)
 
 
-    def Popup(self,var,temp):
+    def Popup(self,var,temp): # this function shows the values of the parameters of each mode
         str = user + "\\" + var +'.txt'
         print(str)
         f = open(str,"r")
@@ -96,7 +96,7 @@ class MyGrid(GridLayout):
 
 #command= lambda: time_delay(e1.get(),root)
 #class MyFunctions():
-    def AOO(self,temp): #done
+    def AOO(self,temp): # This is the AOO function
 ####################################################
         var = "AOO"
         self.clear_widgets()
@@ -106,8 +106,8 @@ class MyGrid(GridLayout):
 ###############################################
 
         self.cols = 3
-        self.add_widget(Label(text="Lower Rate Limit"))
-        self.name1 = TextInput(multiline=False)
+        self.add_widget(Label(text="Lower Rate Limit"))# these blocks show the specific parameters for the mode...
+        self.name1 = TextInput(multiline=False) # ...and gives the user the chance to change them
         self.add_widget(self.name1)
         self.submit1 = Button(text = "Change",font_size = 30)
         self.submit1.bind(on_press = partial(self.pressed,self.name1,var,'Lower Rate Limit'))
@@ -134,37 +134,17 @@ class MyGrid(GridLayout):
         self.submit4.bind(on_press = partial(self.pressed,self.name4,var,'Artial Pulse Width'))
         self.add_widget(self.submit4)
 
-        self.add_widget(Label(text="Artial Sensitivity"))
-        self.name5 = TextInput(multiline=False)
-        self.add_widget(self.name5)
-        self.submit5 = Button(text = "Change",font_size = 30)
-        self.submit5.bind(on_press = partial(self.pressed,self.name5,var,'Artial Sensitivity'))
+        self.add_widget(Label(text="Show "+var+" Parameters Values"))
+        self.submit5 = Button(text = "Values",font_size = 30)
+        self.submit5.bind(on_press = partial(self.Popup,var))
         self.add_widget(self.submit5)
 
-        self.add_widget(Label(text="ARP"))
-        self.name6 = TextInput(multiline=False)
-        self.add_widget(self.name6)
-        self.submit6 = Button(text = "Change",font_size = 30)
-        self.submit6.bind(on_press = partial(self.pressed,self.name6,var,'ARP'))
-        self.add_widget(self.submit6)
-
-        self.add_widget(Label(text="PVARP"))
-        self.name7 = TextInput(multiline=False)
-        self.add_widget(self.name7)
-        self.submit7 = Button(text = "Change",font_size = 30)
-        self.submit7.bind(on_press = partial(self.pressed,self.name7,var,'PVARP'))
-        self.add_widget(self.submit7)
-
-        self.add_widget(Label(text="Show "+var+" Parameters Values"))
-        self.submit8 = Button(text = "Values",font_size = 30)
-        self.submit8.bind(on_press = partial(self.Popup,var))
-        self.add_widget(self.submit8)
         global connection
-        if(connection == 1):
+        if(connection == 1): # this block shows the user if the pacemaker is connected or not
             self.add_widget(Label(text="CONNECTED"))
         else:
             self.add_widget(Label(text="NOT CONNECTED"))
-    def VOO(self,temp): #done
+    def VOO(self,temp): # This is the VOO function
 ####################################################
         var = "VOO"
         self.clear_widgets()
@@ -214,7 +194,7 @@ class MyGrid(GridLayout):
             self.add_widget(Label(text="NOT CONNECTED"))
 
 
-    def AAI(self,temp):
+    def AAI(self,temp): # this is the AAI function
 ####################################################
         var = "AAI"
         self.clear_widgets()
@@ -299,7 +279,7 @@ class MyGrid(GridLayout):
 
 
 
-    def VVI(self,temp):
+    def VVI(self,temp): # this is the VVI function
 ####################################################
         var = "VVI"
         self.clear_widgets()
@@ -331,16 +311,37 @@ class MyGrid(GridLayout):
         self.add_widget(self.submit3)
 
         self.add_widget(Label(text="Ventricular Pulse Width"))
-        self.name4 = TextInput(multiline=False)
-        self.add_widget(self.name4)
-        self.submit4 = Button(text = "Change",font_size = 30)
-        self.submit4.bind(on_press = partial(self.pressed,self.name4,var,'Ventricular Pulse Width'))
-        self.add_widget(self.submit4)
+        self.name5 = TextInput(multiline=False)
+        self.add_widget(self.name5)
+        self.submit5 = Button(text = "Change",font_size = 30)
+        self.submit5.bind(on_press = partial(self.pressed,self.name5,var,'Ventricular Pulse Width'))
+        self.add_widget(self.submit5)
+
+        self.add_widget(Label(text="Ventricular Sensitivity"))
+        self.name6 = TextInput(multiline=False)
+        self.add_widget(self.name6)
+        self.submit6 = Button(text = "Change",font_size = 30)
+        self.submit6.bind(on_press = partial(self.pressed,self.name6,var,'Ventricular Pulse Width'))
+        self.add_widget(self.submit6)
+
+        self.add_widget(Label(text="Hysteresis"))
+        self.name7 = TextInput(multiline=False)
+        self.add_widget(self.name7)
+        self.submit7 = Button(text = "Change",font_size = 30)
+        self.submit7.bind(on_press = partial(self.pressed,self.name7,var,'Ventricular Pulse Width'))
+        self.add_widget(self.submit7)
+
+        self.add_widget(Label(text="Rate Smoothing"))
+        self.name8 = TextInput(multiline=False)
+        self.add_widget(self.name8)
+        self.submit8 = Button(text = "Change",font_size = 30)
+        self.submit8.bind(on_press = partial(self.pressed,self.name8,var,'Ventricular Pulse Width'))
+        self.add_widget(self.submit8)
 
         self.add_widget(Label(text="Show "+var+" Parameters Values"))
-        self.submit5 = Button(text = "Values",font_size = 30)
-        self.submit5.bind(on_press = partial(self.Popup,var))
-        self.add_widget(self.submit5)
+        self.submit9 = Button(text = "Values",font_size = 30)
+        self.submit9.bind(on_press = partial(self.Popup,var))
+        self.add_widget(self.submit9)
         global connection
         if(connection == 1):
             self.add_widget(Label(text="CONNECTED"))
@@ -348,17 +349,17 @@ class MyGrid(GridLayout):
             self.add_widget(Label(text="NOT CONNECTED"))
 
 
-    def pressed(self,instance,mode,var,temp3):
+    def pressed(self,instance,mode,var,temp3): # this function is invoked when the user presses any change button
         global user
 
-        str = user + '\\' + mode+'.txt'
+        str = user + '\\' + mode+'.txt' # the path for the required file
         print(str)
         f = open(str, "r+")
         lines = f.readlines()
         print(lines)
         i = 0
         line=""
-        for line in lines:
+        for line in lines: # this for loop finds where the requested parameter is located
 
             pos = line.find("(")
             print(pos)
@@ -368,13 +369,11 @@ class MyGrid(GridLayout):
             print("line",line)
             print("var",var)
             if(line == var):
-                print ("left")
                 break
             else:
                 i = i + 1
-        print("im here")
         print(line)
-        line = line + "(" + instance.text + ")" + "\n"
+        line = line + "(" + instance.text + ")" + "\n" # the line gets the parameter inputed between the brackets
         print(line)
         print("1",lines)
 
@@ -383,7 +382,7 @@ class MyGrid(GridLayout):
         lines = ''.join(lines)
         print("3",lines)
         f.seek(0)
-        f.write(lines)
+        f.write(lines)# file gets overwritten with the new information
         f.truncate()
         f.close()
 
