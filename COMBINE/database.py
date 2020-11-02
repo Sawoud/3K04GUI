@@ -40,7 +40,6 @@ class DataBase:
             self.save()
             return 1
         else:
-            print("Email exists already")
             return -1
     def delete_user(self,email):
         self.users.pop(email,None)
