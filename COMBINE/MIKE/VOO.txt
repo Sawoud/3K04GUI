@@ -1,4 +1,4 @@
-Lower Rate Limit(73)
+Lower Rate Limit()
 Upper Rate Limit()
 Ventricular Amplitude()
 Ventricular Pulse Width()

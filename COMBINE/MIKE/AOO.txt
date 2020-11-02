@@ -1,4 +1,4 @@
-Lower Rate Limit(72)
+Lower Rate Limit(74)
 Upper Rate Limit()
 Atrial Amplitude()
 Artial Pulse Width()
