@@ -11,8 +11,16 @@ class DataBase:
         self.load()
 
     def load(self):
-        self.file = open(self.filename, "r")
-        self.users = {}
+        loading=True
+        while(loading):
+            try:
+                self.file = open(self.filename, "r")
+                self.users = {}
+                loading=False
+            except:
+                self.file=open(self.filename,"w") #allows code to create a users.txt file if the txt file some how gets deleted
+                self.file.write("")
+                self.file.close()
 
         for line in self.file:
             email, password, name, created = line.strip().split(";")
