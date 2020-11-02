@@ -232,11 +232,11 @@ class MyGrid(GridLayout):
         self.add_widget(self.submit4)
 
 
-        self.add_widget(Label(text="Artial Sensitivity"))
+        self.add_widget(Label(text="Atrial Sensitivity"))
         self.name5 = TextInput(multiline=False)
         self.add_widget(self.name5)
         self.submit5 = Button(text = "Change",font_size = 30)
-        self.submit5.bind(on_press = partial(self.pressed,self.name5,var,'Artial Sensitivity'))
+        self.submit5.bind(on_press = partial(self.pressed,self.name5,var,'Atrial Sensitivity'))
         self.add_widget(self.submit5)
 
         self.add_widget(Label(text="ARP"))
@@ -321,21 +321,21 @@ class MyGrid(GridLayout):
         self.name6 = TextInput(multiline=False)
         self.add_widget(self.name6)
         self.submit6 = Button(text = "Change",font_size = 30)
-        self.submit6.bind(on_press = partial(self.pressed,self.name6,var,'Ventricular Pulse Width'))
+        self.submit6.bind(on_press = partial(self.pressed,self.name6,var,"Ventricular Sensitivity"))
         self.add_widget(self.submit6)
 
         self.add_widget(Label(text="Hysteresis"))
         self.name7 = TextInput(multiline=False)
         self.add_widget(self.name7)
         self.submit7 = Button(text = "Change",font_size = 30)
-        self.submit7.bind(on_press = partial(self.pressed,self.name7,var,'Ventricular Pulse Width'))
+        self.submit7.bind(on_press = partial(self.pressed,self.name7,var,"Hysteresis"))
         self.add_widget(self.submit7)
 
         self.add_widget(Label(text="Rate Smoothing"))
         self.name8 = TextInput(multiline=False)
         self.add_widget(self.name8)
         self.submit8 = Button(text = "Change",font_size = 30)
-        self.submit8.bind(on_press = partial(self.pressed,self.name8,var,'Ventricular Pulse Width'))
+        self.submit8.bind(on_press = partial(self.pressed,self.name8,var,"Rate Smoothing"))
         self.add_widget(self.submit8)
 
         self.add_widget(Label(text="Show "+var+" Parameters Values"))
