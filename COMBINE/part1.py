@@ -29,9 +29,9 @@ class CreateAccountWindow(Screen):
                     except:
                         print("This user's folder has already been created")
 
-                    AOOstring="Lower Rate Limit()\nUpper Rate Limit()\nAtrial Amplitude()\nArtial Pulse Width()\nArtial Sensitivity()\nARP()\nPVARP()\nHysteresis()\nRate Smoothing()\n"
-                    AAIstring="Lower Rate Limit()\nUpper Rate Limit()\nAtrial Amplitude()\nArtial Pulse Width()\nArtial Sensitivity()\nARP()\nPVARP()\n"
-                    VVIstring="Lower Rate Limit()\nUpper Rate Limit()\nVentricular Amplitude()\nVentricular Pulse Width()\n"
+                    AAIstring="Lower Rate Limit()\nUpper Rate Limit()\nAtrial Amplitude()\nArtial Pulse Width()\nArtial Sensitivity()\nARP()\nPVARP()\nHysteresis()\nRate Smoothing()\n"
+                    VVIstring="Lower Rate Limit()\nUpper Rate Limit()\nVentricular Amplitude()\nVentricular Pulse Width()\nVentricular Sensitivity()\nHysteresis()\nRate Smoothing()\n"
+                    AOOstring="Lower Rate Limit()\nUpper Rate Limit()\nAtrial Amplitude()\nArtial Pulse Width()\n"
                     VOOstring="Lower Rate Limit()\nUpper Rate Limit()\nVentricular Amplitude()\nVentricular Pulse Width()\n"
                     with open(os.path.join(x,"AAI.txt"), "a") as fileopened:
                         fileopened.write(AAIstring)
