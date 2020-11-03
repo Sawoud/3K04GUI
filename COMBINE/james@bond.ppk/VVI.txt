@@ -1,0 +1,7 @@
+Lower Rate Limit()
+Upper Rate Limit(80)
+Ventricular Amplitude()
+Ventricular Pulse Width()
+Ventricular Sensitivity()
+Hysteresis()
+Rate Smoothing()

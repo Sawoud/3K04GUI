@@ -1,6 +1,6 @@
 Lower Rate Limit()
 Upper Rate Limit()
-Artial Amplitude()
+Atrial Amplitude()
 Artial Pulse Width()
 Artial Sensitivity()
 ARP()
