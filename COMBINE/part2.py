@@ -98,39 +98,11 @@ class MyGrid(GridLayout):
         size_hint=(None, None), size=(400, 400))
         popup.open()
 
-    def __init__(self,**kwargs):
-        super(MyGrid,self).__init__(**kwargs)
-        # popup = Popup(title='Test popup',
-        # content=Label(text='Hello world'),
-        # size_hint=(None, None), size=(400, 400))
-        # popup.open()
-
-        self.cols = 2
-        self.aoo = Button(text = "AOO")
-        self.aoo.bind(on_press=self.AOO)
-        self.add_widget(self.aoo)
-
-        self.voo = Button(text = "VOO")
-        self.voo.bind(on_press=self.VOO)
-        self.add_widget(self.voo)
-
-        self.aai = Button(text = "AAI")
-        self.aai.bind(on_press=self.AAI)
-        self.add_widget(self.aai)
-
-        self.vvi = Button(text = "VVI")
-        self.vvi.bind(on_press=self.VVI)
-        self.add_widget(self.vvi)
-
 
     def para(self,var,select):
         global font_size
         self.clear_widgets()
-        self.AddButtons(1)
-#        self.Popup(var)
-        Connect()
-###############################################
-
+        self.AddButtons(select)
         self.cols = 3
         self.add_widget(Label(text="Lower Rate Limit"))# these blocks show the specific parameters for the mode...
         self.name1 = TextInput(multiline=False) # ...and gives the user the chance to change them
@@ -302,211 +274,40 @@ class MyGrid(GridLayout):
         self.submitend.bind(on_press = partial(self.Popup,var))
         self.add_widget(self.submitend)
 
+        Connect()
         global connection
         if(connection == 1): # this block shows the user if the pacemaker is connected or not
             self.add_widget(Label(text="CONNECTED"))
         else:
             self.add_widget(Label(text="NOT CONNECTED"))
-    def VOO(self,temp): # This is the VOO function
-####################################################
-        var = "VOO"
-        self.clear_widgets()
-        self.AddButtons(2)
-        Connect()
 
-###############################################
-        self.cols = 3
 
-        self.add_widget(Label(text="Lower Rate Limit"))
-        self.name1 = TextInput(multiline=False)
-        self.add_widget(self.name1)
-        self.submit1 = Button(text = "Change",font_size = 30)
-        self.submit1.bind(on_press = partial(self.pressed,self.name1,var,'Lower Rate Limit'))
-        self.add_widget(self.submit1)
+    def __init__(self,**kwargs):
+        super(MyGrid,self).__init__(**kwargs)
 
         self.cols = 1
         self.AddButtons(0)
 # MODE FUNCTIONS
 
-        self.add_widget(Label(text="Ventricular Amplitude"))
-        self.name3 = TextInput(multiline=False)
-        self.add_widget(self.name3)
-        self.submit3 = Button(text = "Change",font_size = 30)
-        self.submit3.bind(on_press = partial(self.pressed,self.name3,var,'Ventricular Amplitude'))
-        self.add_widget(self.submit3)
+####################################################
 
-        self.add_widget(Label(text="Ventricular Pulse Width"))
-        self.name4 = TextInput(multiline=False)
-        self.add_widget(self.name4)
-        self.submit4 = Button(text = "Change",font_size = 30)
-        self.submit4.bind(on_press = partial(self.pressed,self.name4,var,'Ventricular Pulse Width'))
-        self.add_widget(self.submit4)
+    def AOO(self,temp): # This is the AOO function
+        var = "AOO"
+        self.para(var,1)
+####################################################
 
-        self.add_widget(Label(text="Show "+var+" Parameters Values"))
-        self.submit5 = Button(text = "Values",font_size = 30)
-        self.submit5.bind(on_press = partial(self.Popup,var))
-        self.add_widget(self.submit5)
-        global connection
-        if(connection == 1):
-            self.add_widget(Label(text="CONNECTED"))
-        else:
-            self.add_widget(Label(text="NOT CONNECTED"))
-
-
+    def VOO(self,temp): # This is the VOO function
+        var = "VOO"
+        self.para(var,2)
+####################################################
     def AAI(self,temp): # this is the AAI function
-####################################################
         var = "AAI"
-        self.clear_widgets()
-        self.AddButtons(3)
-        Connect()
-
-###############################################
-        self.cols = 3
-        self.add_widget(Label(text="Lower Rate Limit"))
-        self.name1 = TextInput(multiline=False)
-        self.add_widget(self.name1)
-        self.submit1 = Button(text = "Change",font_size = 30)
-        self.submit1.bind(on_press = partial(self.pressed,self.name1,var,'Lower Rate Limit'))
-        self.add_widget(self.submit1)
-
-        self.add_widget(Label(text="Upper Rate Limit"))
-        self.name2 = TextInput(multiline=False)
-        self.add_widget(self.name2)
-        self.submit2 = Button(text = "Change",font_size = 30)
-        self.submit2.bind(on_press = partial(self.pressed,self.name2,var,'Upper Rate Limit'))
-        self.add_widget(self.submit2)
-
-        self.add_widget(Label(text="Atrial Amplitude"))
-        self.name3 = TextInput(multiline=False)
-        self.add_widget(self.name3)
-        self.submit3 = Button(text = "Change",font_size = 30)
-        self.submit3.bind(on_press = partial(self.pressed,self.name3,var,'Atrial Amplitude'))
-        self.add_widget(self.submit3)
-
-        self.add_widget(Label(text="Atrial Pulse Width"))
-        self.name4 = TextInput(multiline=False)
-        self.add_widget(self.name4)
-        self.submit4 = Button(text = "Change",font_size = 30)
-        self.submit4.bind(on_press = partial(self.pressed,self.name4,var,'Atrial Pulse Width'))
-        self.add_widget(self.submit4)
-
-
-        self.add_widget(Label(text="Atrial Sensitivity"))
-        self.name5 = TextInput(multiline=False)
-        self.add_widget(self.name5)
-        self.submit5 = Button(text = "Change",font_size = 30)
-        self.submit5.bind(on_press = partial(self.pressed,self.name5,var,'Atrial Sensitivity'))
-        self.add_widget(self.submit5)
-
-        self.add_widget(Label(text="ARP"))
-        self.name6 = TextInput(multiline=False)
-        self.add_widget(self.name6)
-        self.submit6 = Button(text = "Change",font_size = 30)
-        self.submit6.bind(on_press = partial(self.pressed,self.name6,var,'ARP'))
-        self.add_widget(self.submit6)
-
-        self.add_widget(Label(text="PVARP"))
-        self.name7 = TextInput(multiline=False)
-        self.add_widget(self.name7)
-        self.submit7 = Button(text = "Change",font_size = 30)
-        self.submit7.bind(on_press = partial(self.pressed,self.name7,var,'PVARP'))
-        self.add_widget(self.submit7)
-
-        self.add_widget(Label(text="Hysteresis"))
-        self.name8 = TextInput(multiline=False)
-        self.add_widget(self.name8)
-        self.submit8 = Button(text = "Change",font_size = 30)
-        self.submit8.bind(on_press = partial(self.pressed,self.name8,var,'Hysteresis'))
-        self.add_widget(self.submit8)
-
-        self.add_widget(Label(text="Rate Smoothing"))
-        self.name9 = TextInput(multiline=False)
-        self.add_widget(self.name9)
-        self.submit9 = Button(text = "Change",font_size = 30)
-        self.submit9.bind(on_press = partial(self.pressed,self.name9,var,'Rate Smoothing'))
-        self.add_widget(self.submit9)
-
-        self.add_widget(Label(text="Show "+var+" Parameters Values"))
-        self.submit10 = Button(text = "Values",font_size = 30)
-        self.submit10.bind(on_press = partial(self.Popup,var))
-        self.add_widget(self.submit10)
-        global connection
-        if(connection == 1):
-            self.add_widget(Label(text="CONNECTED"))
-        else:
-            self.add_widget(Label(text="NOT CONNECTED"))
-
-
-
-    def VVI(self,temp): # this is the VVI function
+        self.para(var,3)
 ####################################################
+    def VVI(self,temp): # this is the VVI function
         var = "VVI"
-        self.clear_widgets()
-        self.AddButtons(4)
-        Connect()
-
-###############################################
-        self.cols = 3
-        var2 = 4
-        self.add_widget(Label(text="Lower Rate Limit"))
-        self.name1 = TextInput(multiline=False)
-        self.add_widget(self.name1)
-        self.submit1 = Button(text = "Change",font_size = 30)
-        self.submit1.bind(on_press = partial(self.pressed,self.name1,var,'Lower Rate Limit'))
-        self.add_widget(self.submit1)
-
-        self.add_widget(Label(text="Upper Rate Limit"))
-        self.name2 = TextInput(multiline=False)
-        self.add_widget(self.name2)
-        self.submit2 = Button(text = "Change",font_size = 30)
-        self.submit2.bind(on_press = partial(self.pressed,self.name2,var,'Upper Rate Limit'))
-        self.add_widget(self.submit2)
-
-        self.add_widget(Label(text="Ventricular Amplitude"))
-        self.name3 = TextInput(multiline=False)
-        self.add_widget(self.name3)
-        self.submit3 = Button(text = "Change",font_size = 30)
-        self.submit3.bind(on_press = partial(self.pressed,self.name3,var,'Ventricular Amplitude'))
-        self.add_widget(self.submit3)
-
-        self.add_widget(Label(text="Ventricular Pulse Width"))
-        self.name5 = TextInput(multiline=False)
-        self.add_widget(self.name5)
-        self.submit5 = Button(text = "Change",font_size = 30)
-        self.submit5.bind(on_press = partial(self.pressed,self.name5,var,'Ventricular Pulse Width'))
-        self.add_widget(self.submit5)
-
-        self.add_widget(Label(text="Ventricular Sensitivity"))
-        self.name6 = TextInput(multiline=False)
-        self.add_widget(self.name6)
-        self.submit6 = Button(text = "Change",font_size = 30)
-        self.submit6.bind(on_press = partial(self.pressed,self.name6,var,"Ventricular Sensitivity"))
-        self.add_widget(self.submit6)
-
-        self.add_widget(Label(text="Hysteresis"))
-        self.name7 = TextInput(multiline=False)
-        self.add_widget(self.name7)
-        self.submit7 = Button(text = "Change",font_size = 30)
-        self.submit7.bind(on_press = partial(self.pressed,self.name7,var,"Hysteresis"))
-        self.add_widget(self.submit7)
-
-        self.add_widget(Label(text="Rate Smoothing"))
-        self.name8 = TextInput(multiline=False)
-        self.add_widget(self.name8)
-        self.submit8 = Button(text = "Change",font_size = 30)
-        self.submit8.bind(on_press = partial(self.pressed,self.name8,var,"Rate Smoothing"))
-        self.add_widget(self.submit8)
-
-        self.add_widget(Label(text="Show "+var+" Parameters Values"))
-        self.submit9 = Button(text = "Values",font_size = 30)
-        self.submit9.bind(on_press = partial(self.Popup,var))
-        self.add_widget(self.submit9)
-        global connection
-        if(connection == 1):
-            self.add_widget(Label(text="CONNECTED"))
-        else:
-            self.add_widget(Label(text="NOT CONNECTED"))
-
+        self.para(var,4)
+####################################################
 
 ####################################################
 
@@ -586,4 +387,4 @@ def main(info):
     print("this is",info)
     MyApp().run()
 
-#main("hellloMAIN")
+main("MIKE")
