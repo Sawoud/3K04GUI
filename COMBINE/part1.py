@@ -30,17 +30,38 @@ class CreateAccountWindow(Screen):
                         print("This user's folder has already been created")
 
                     AAIstring="Lower Rate Limit()\nUpper Rate Limit()\nAtrial Amplitude()\nAtrial Pulse Width()\nAtrial Sensitivity()\nARP()\nPVARP()\nHysteresis()\nRate Smoothing()\n"
+                    AAIRstring="Lower Rate Limit()\nUpper Rate Limit()\nMaximum Sensor Rate()\nAtrial Amplitude()\nAtrial Pulse Width()\nAtrial Sensitivity()\nARP()\nPVARP()\nHysteresis()\nRate Smoothing()\nActivity Threshold()\nReaction Time()\nResponse Factor()\nRecovery Time()\n"
+                    AOOstring="Lower Rate Limit()\nUpper Rate Limit()\nAtrial Amplitude()\nAtrial Pulse Width()\n"
+                    AOORstring="Lower Rate Limit()\nUpper Rate Limit()\nMaximum Sensor Rate()\nAtrial Amplitude()\nAtrial Pulse Width()\nActivity Threshold()\nReaction Time()\nResponse Factor()\nRecovery Time()\n"
                     VVIstring="Lower Rate Limit()\nUpper Rate Limit()\nVentricular Amplitude()\nVentricular Pulse Width()\nVentricular Sensitivity()\nHysteresis()\nRate Smoothing()\n"
-                    AOOstring="Lower Rate Limit()\nUpper Rate Limit()\nAtrial Amplitude()\nArtial Pulse Width()\n"
+                    VVIRstring="Lower Rate Limit()\nUpper Rate Limit()\nMaximum Sensor Rate()\nVentricular Amplitude()\nVentricular Pulse Width()\nVRP()\nARP()\nHysteresis()\nRate Smoothing()\nVentricular Sensitivity()\nActivity Threshold()\nReaction Time()\nResponse Factor()\nRecovery Time()\n"
                     VOOstring="Lower Rate Limit()\nUpper Rate Limit()\nVentricular Amplitude()\nVentricular Pulse Width()\n"
+                    VOORstring="Lower Rate Limit()\nUpper Rate Limit()\nMaximum Sensor Rate()\nVentricular Amplitude()\nVentricular Pulse Width()\nActivity Threshold()\nReaction Time()\nResponse Factor()\nRecovery Time()\n"
+                    DOOstring="Lower Rate Limit()\nUpper Rate Limit()\nFixed AV Delay()\nAtrial Pulse Width()\nVentricular Amplitude()\nVentricular Pulse Width()\n"
+                    DOORstring="Lower Rate Limit()\nUpper Rate Limit()\nMaximum Sensor Rate()\nFixed AV Delay()\nAtrial Amplitude()\nAtrial Pulse Width()\nVentricular Amplitude()\nVentricular Pulse Width()\nActivity Threshold()\nReaction Time()\nResponse Factor()\nRecovery Time()\n"
+
                     with open(os.path.join(x,"AAI.txt"), "a") as fileopened:
                         fileopened.write(AAIstring)
-                    with open(os.path.join(x,"AOO.txt"), "a") as fileopened1:
-                        fileopened1.write(AOOstring)
-                    with open(os.path.join(x,"VVI.txt"), "a") as fileopened2:
-                        fileopened2.write(VVIstring)
-                    with open(os.path.join(x,"VOO.txt"), "a") as fileopened3:
-                        fileopened3.write(VOOstring)
+                    with open(os.path.join(x,"AOO.txt"), "a") as fileopened:
+                        fileopened.write(AOOstring)
+                    with open(os.path.join(x,"AAIR.txt"), "a") as fileopened:
+                        fileopened.write(AAIRstring)
+                    with open(os.path.join(x,"AOOR.txt"), "a") as fileopened:
+                        fileopened.write(AOORstring)
+                    with open(os.path.join(x,"VVI.txt"), "a") as fileopened:
+                        fileopened.write(VVIstring)
+                    with open(os.path.join(x,"VOO.txt"), "a") as fileopened:
+                        fileopened.write(VOOstring)
+                    with open(os.path.join(x,"VVIR.txt"), "a") as fileopened:
+                        fileopened.write(VVIRstring)
+                    with open(os.path.join(x,"VOOR.txt"), "a") as fileopened:
+                        fileopened.write(VOORstring)
+                    with open(os.path.join(x,"DOO.txt"), "a") as fileopened:
+                        fileopened.write(DOOstring)
+                    with open(os.path.join(x,"DOOR.txt"), "a") as fileopened:
+                        fileopened.write(DOORstring)
+
+
                     self.reset()
                     sm.current = "login"
 
