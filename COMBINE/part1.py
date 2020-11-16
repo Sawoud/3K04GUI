@@ -28,17 +28,17 @@ class CreateAccountWindow(Screen):
                         os.makedirs(self.email.text)
                     except:
                         print("This user's folder has already been created")
-
-                    AAIstring="Lower Rate Limit()\nUpper Rate Limit()\nAtrial Amplitude()\nAtrial Pulse Width()\nAtrial Sensitivity()\nARP()\nPVARP()\nHysteresis()\nRate Smoothing()\n"
-                    AAIRstring="Lower Rate Limit()\nUpper Rate Limit()\nMaximum Sensor Rate()\nAtrial Amplitude()\nAtrial Pulse Width()\nAtrial Sensitivity()\nARP()\nPVARP()\nHysteresis()\nRate Smoothing()\nActivity Threshold()\nReaction Time()\nResponse Factor()\nRecovery Time()\n"
-                    AOOstring="Lower Rate Limit()\nUpper Rate Limit()\nAtrial Amplitude()\nAtrial Pulse Width()\n"
-                    AOORstring="Lower Rate Limit()\nUpper Rate Limit()\nMaximum Sensor Rate()\nAtrial Amplitude()\nAtrial Pulse Width()\nActivity Threshold()\nReaction Time()\nResponse Factor()\nRecovery Time()\n"
-                    VVIstring="Lower Rate Limit()\nUpper Rate Limit()\nVentricular Amplitude()\nVentricular Pulse Width()\nVentricular Sensitivity()\nHysteresis()\nRate Smoothing()\n"
-                    VVIRstring="Lower Rate Limit()\nUpper Rate Limit()\nMaximum Sensor Rate()\nVentricular Amplitude()\nVentricular Pulse Width()\nVRP()\nARP()\nHysteresis()\nRate Smoothing()\nVentricular Sensitivity()\nActivity Threshold()\nReaction Time()\nResponse Factor()\nRecovery Time()\n"
-                    VOOstring="Lower Rate Limit()\nUpper Rate Limit()\nVentricular Amplitude()\nVentricular Pulse Width()\n"
-                    VOORstring="Lower Rate Limit()\nUpper Rate Limit()\nMaximum Sensor Rate()\nVentricular Amplitude()\nVentricular Pulse Width()\nActivity Threshold()\nReaction Time()\nResponse Factor()\nRecovery Time()\n"
-                    DOOstring="Lower Rate Limit()\nUpper Rate Limit()\nFixed AV Delay()\nAtrial Pulse Width()\nVentricular Amplitude()\nVentricular Pulse Width()\n"
-                    DOORstring="Lower Rate Limit()\nUpper Rate Limit()\nMaximum Sensor Rate()\nFixed AV Delay()\nAtrial Amplitude()\nAtrial Pulse Width()\nVentricular Amplitude()\nVentricular Pulse Width()\nActivity Threshold()\nReaction Time()\nResponse Factor()\nRecovery Time()\n"
+                    Currentmode="DOOR"
+                    AAIstring="Lower Rate Limit(60)\nUpper Rate Limit(120)\nAtrial Amplitude(3.5)\nAtrial Pulse Width(0.4)\nAtrial Sensitivity(0.5)\nARP(250)\nPVARP(250)\nHysteresis(off)\nRate Smoothing(off)\n"
+                    AAIRstring="Lower Rate Limit(60)\nUpper Rate Limit(120)\nMaximum Sensor Rate(120)\nAtrial Amplitude(3.5)\nAtrial Pulse Width(0.4)\nAtrial Sensitivity(0.75)\nARP(250)\nPVARP(250)\nHysteresis(off)\nRate Smoothing(off)\nActivity Threshold(Med)\nReaction Time(30)\nResponse Factor(8)\nRecovery Time(5)\n"
+                    AOOstring="Lower Rate Limit(60)\nUpper Rate Limit(120)\nAtrial Amplitude(3.5)\nAtrial Pulse Width(0.4)\n"
+                    AOORstring="Lower Rate Limit(60)\nUpper Rate Limit(120)\nMaximum Sensor Rate(120)\nAtrial Amplitude(3.5)\nAtrial Pulse Width(0.4)\nActivity Threshold(Med)\nReaction Time(30)\nResponse Factor(8)\nRecovery Time(5)\n"
+                    VVIstring="Lower Rate Limit(60)\nUpper Rate Limit(120)\nVentricular Amplitude(3.5)\nVentricular Pulse Width(0.4)\nVentricular Sensitivity(2.5)\nHysteresis(off)\nRate Smoothing(off)\n"
+                    VVIRstring="Lower Rate Limit(60)\nUpper Rate Limit(120)\nMaximum Sensor Rate(120)\nVentricular Amplitude(3.5)\nVentricular Pulse Width(0.4)\nVRP(320)\nARP(250)\nHysteresis(off)\nRate Smoothing(off)\nVentricular Sensitivity(2.5)\nActivity Threshold(Med)\nReaction Time(30)\nResponse Factor(8)\nRecovery Time(5)\n"
+                    VOOstring="Lower Rate Limit(60)\nUpper Rate Limit(120)\nVentricular Amplitude(3.5)\nVentricular Pulse Width(0.4)\n"
+                    VOORstring="Lower Rate Limit(60)\nUpper Rate Limit(120)\nMaximum Sensor Rate(120)\nVentricular Amplitude(3.5)\nVentricular Pulse Width(0.4)\nActivity Threshold(Med)\nReaction Time(30)\nResponse Factor(8)\nRecovery Time(5)\n"
+                    DOOstring="Lower Rate Limit(60)\nUpper Rate Limit(120)\nFixed AV Delay(150)\nAtrial Pulse Width(0.4)\nVentricular Amplitude(3.5)\nVentricular Pulse Width(0.4)\n"
+                    DOORstring="Lower Rate Limit(60)\nUpper Rate Limit(120)\nMaximum Sensor Rate(120)\nFixed AV Delay(150)\nAtrial Amplitude(3.5)\nAtrial Pulse Width(0.4)\nVentricular Amplitude(3.5)\nVentricular Pulse Width(0.4)\nActivity Threshold(Med)\nReaction Time(30)\nResponse Factor(8)\nRecovery Time(5)\n"
 
                     with open(os.path.join(x,"AAI.txt"), "a") as fileopened:
                         fileopened.write(AAIstring)
@@ -60,6 +60,8 @@ class CreateAccountWindow(Screen):
                         fileopened.write(DOOstring)
                     with open(os.path.join(x,"DOOR.txt"), "a") as fileopened:
                         fileopened.write(DOORstring)
+                    with open(os.path.join(x,"SETTOMODE.txt"), "a") as fileopened:
+                        fileopened.write(Currentmode)
 
 
                     self.reset()
