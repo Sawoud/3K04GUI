@@ -1,6 +1,1 @@
-sawoud@allos.ca;sawoud;sawoud;2020-10-21
-s@a.c;a;s;2020-10-21
-q@q.q;q;q;2020-10-21
-m@m.m;m;m;2020-10-21
-alloss@mcmaster.ca;123;alloss;2020-10-26
-g@g.g;g;g;2020-11-01
+mike@mike.ca;mike;mike;2020-11-25

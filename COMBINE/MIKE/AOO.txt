@@ -1,4 +1,0 @@
-Lower Rate Limit(1)
-Upper Rate Limit(2)
-Atrial Amplitude(3)
-Atrial Pulse Width(4)

@@ -119,7 +119,8 @@ class LoginWindow(Screen):
         if db.validate(self.email.text, self.password.text):
             MainWindow.current = self.email.text
             App.get_running_app().stop()
-            main(self.email.text)
+            name = db.get_user(self.email.text)
+            main(name[1],self.email.text)
             self.reset()
 
         else:

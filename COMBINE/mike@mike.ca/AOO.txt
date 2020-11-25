@@ -1,0 +1,4 @@
+Lower Rate Limit(45)
+Upper Rate Limit(160)
+Atrial Amplitude(3.5)
+Atrial Pulse Width(0.4)

@@ -1,7 +1,0 @@
-Lower Rate Limit(1)
-Upper Rate Limit(2)
-Ventricular Amplitude(3)
-Ventricular Pulse Width(4)
-Ventricular Sensitivity(7)
-Hysteresis(5)
-Rate Smoothing(6)

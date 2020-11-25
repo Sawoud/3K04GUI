@@ -9,18 +9,54 @@ from functools import partial
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.popup import Popup
 import os.path
-import serial
+import serial, struct
 import re
 import threading
 from kivy.uix.slider import Slider
-
-
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+import random
+import sys
 # still have to do the displaying numbers onto the screen
 var2 = 0
 
-connection = 0
+allparaog = {"mode":0,"Lower Rate Limit":0,"Upper Rate Limit":0,"Maximum Sensor Rate":0,"Fixed AV Delay":0,"Atrial Amplitude":0,"Atrial Pulse Width":0,"Ventricular Amplitude":0,"Ventricular Pulse Width":0,"Atrial Sensitivity":0,"VRP":0,"ARP":0,"PVARP":0,"Rate Smoothing":0,"Ventricular Sensitivity":0,"Activity Threshold":0,"Reaction Time":0,"Response Factor":0,"Recovery Time":0}
+allpara = {"mode":0,"Lower Rate Limit":0,"Upper Rate Limit":0,"Maximum Sensor Rate":0,"Fixed AV Delay":0,"Atrial Amplitude":0,"Atrial Pulse Width":0,"Ventricular Amplitude":0,"Ventricular Pulse Width":0,"Atrial Sensitivity":0,"VRP":0,"ARP":0,"PVARP":0,"Rate Smoothing":0,"Ventricular Sensitivity":0,"Activity Threshold":0,"Reaction Time":0,"Response Factor":0,"Recovery Time":0}
+allparaarray = ["mode","Lower Rate Limit","Upper Rate Limit","Maximum Sensor Rate","Fixed AV Delay","Atrial Amplitude","Atrial Pulse Width","Ventricular Amplitude","Ventricular Pulse Width","Atrial Sensitivity","VRP","ARP","PVARP","Rate Smoothing","Ventricular Sensitivity","Activity Threshold","Reaction Time","Response Factor","Recovery Time"]
+
+good = 1
+connection = ""
 
 font_size = 20
+def startthread(self):
+    global t1
+    t1 = threading.Thread(target = graph)
+    t1.start()
+
+def kill():
+    global t1
+    t1 = None
+a = [0]
+b = [0]
+
+def animate(i):
+    global a,b
+    a.append(a[-1]+1)
+    b.append(random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15))
+    plt.cla()
+    plt.plot(a,b)
+
+def graph():
+    global a,b
+    ani = FuncAnimation(plt.gcf(),animate,interval =1000)
+    plt.tight_layout()
+    plt.show()
+    plt.close()
+    a = [0]
+    b = [0]
+    kill()
+
+
 
 def Connect(): # function that deermines if the pace maker is connected or not
     global connection
@@ -30,13 +66,13 @@ def Connect(): # function that deermines if the pace maker is connected or not
       ser = serial.Serial(com, 9600, timeout=.025) # the fn. waits for 1 second, if it cant find a connection it determines its not connected
 
       while ser.read():
-        connection = 0
+        connection = "NOT CONNECTED"
 
-      connection = 1
+      connection = "CONNECTED"
       ser.close()
 
     except serial.serialutil.SerialException:
-      connection = 0
+      connection = "NOT CONNECTED"
 
 
 
@@ -91,6 +127,33 @@ class MyGrid(GridLayout):
             self.add_widget(self.door)
 
 
+
+
+    def filetodic(self,mode,select): # this function is invoked when the user presses any change button
+        global user
+        global allpara
+        global allparaarray
+        for i in allparaarray:
+            allpara[i] = 0
+        allpara["mode"] = select
+        strg = user + '\\' + mode+'.txt' # the path for the required file
+        f = open(strg, "r+")
+        lines = f.readlines()
+        i = 0
+        line=""
+        for line in lines: # this for loop finds where the requested parameter is located
+            lineog = line
+            pos = line.find("(")
+            pos1 = line.find("\n")
+            line = line[:pos] + line[pos1+1:]
+            allpara[line] = lineog[pos+1:pos1-1]
+            i = i + 1
+            print(lineog[pos+1:pos1-1])
+        print(allpara)
+        f.close()
+
+
+
     def Popup(self,var,temp): # this function shows the values of the parameters of each mode
         strg = user + "\\" + var +'.txt'
         f = open(strg,"r")
@@ -99,10 +162,53 @@ class MyGrid(GridLayout):
         size_hint=(None, None), size=(400, 400))
         popup.open()
 
+    def error(self,var,temp):
+        text2="                 ERROR\n"
+        if var =="Lower Rate Limit":
+            text2=text2+"""Valid input range is 30-175ppm\n30-50 ppm with 5 ppm steps\n50-90 ppm with 1 ppm steps\n90-175 ppm with 5 ppm steps\nDO NOT INCLUDE THE UNITS"""
+        elif var =="Upper Rate Limit":
+            text2=text2+"""Valid input range is 50-175ppm\n50-175 ppm with 5 ppm steps\nDO NOT INCLUDE THE UNITS"""
+        elif var =="Atrial Amplitude":
+            text2=text2+"""Valid inputs are "Off" or 0.5-3.2V\n 0.5-3.2V with 0.1V steps\nDO NOT INCLUDE THE UNITS"""
+        elif var =="Atrial Pulse Width":
+            text2=text2+"""The only valid input is 0.05ms\nDO NOT INCLUDE THE UNITS"""
+        elif var =="Atrial Sensitivity":
+            text2=text2+"""Valid input range is 0.25-0.75V\nm with 0.25V steps\nDO NOT INCLUDE THE UNITS"""
+        elif var =="ARP":
+            text2=text2+"""Valid input range is 150-500ms\n150-500 ms with 10ms steps\nDO NOT INCLUDE THE UNITS"""
+        elif var =="VRP":
+            text2=text2+"Valid input range is 150-500ms\n150-500 ms with 10ms steps\nDO NOT INCLUDE THE UNITS"
+        elif var =="PVARP":
+            text2=text2+"""Valid input range is 150-500ms\n150-500 ms with 10ms steps\nDO NOT INCLUDE THE UNITS"""
+        elif var =="Rate Smoothing":
+            text2=text2+"""Valid input range is 3-25%\n3-25% with 3% steps\nDO NOT INCLUDE THE %"""
+        elif var =="Maximum Sensor Rate":
+            text2=text2+"""Valid input range is 50-175ppm\n50-175 ppm with 5 ppm steps\nDO NOT INCLUDE THE UNITS"""
+        elif var =="Activity Threshold":
+            text2=text2+"Can only except the follow values:\n 'V-Low' , 'Low' , 'Med-Low' , 'Med' , 'Med-High' , 'High' , 'V-High'"""
+        elif var =="Reaction Time":
+            text2=text2+"Valid input range is 10-50sec\n10-50sec with 10sec steps\nDO NOT INCLUDE THE UNITS"
+        elif var =="Response Factor":
+            text2=text2+"Valid input range is 1-16\n1-16 with an integer step size of 1"
+        elif var =="Recovery Time":
+            text2=text2+"Valid input range is 2-16min\n2-16min with a 1 min step size\nDO NOT INCLUDE THE UNITS"
+        elif var =="Ventricular Amplitude":
+            text2=text2+"Valid input range is 3.5-7.0V\n3.5-7.0V with a 0.5V step size\nDO NOT INCLUDE THE UNITS"
+        elif var =="Ventricular Pulse Width":
+            text2=text2+"Valid input range is 0.1-1.9ms\n0.1-1.9ms with a 0.1ms step size\nDO NOT INCLUDE THE UNITS "
+        elif var =="Ventricular Sensitivity":
+            text2=text2+"Valid input range is 1-10mV\n1-10mV with a 0.5mV step size\nDO NOT INCLUDE THE UNITS "
+        elif var =="Fixed AV Delay":
+            text2=text2+"Valid input range is 70-300ms\n70-300ms with 10ms step size\nDO NOT INCLUDE THE UNITS"
+        errr = Popup(title="Input Error: "+var,
+        content=Label(text=text2),size_hint=(None, None), size=(400, 400))
+
+        errr.open()
+
 
     def para(self,var,select):
         global font_size
-        global t1
+        self.filetodic(var,select)#write file values in dici
         self.clear_widgets()
         self.AddButtons(select)
         self.cols = 3
@@ -110,6 +216,7 @@ class MyGrid(GridLayout):
         self.name1 = TextInput(multiline=False) # ...and gives the user the chance to change them
         self.add_widget(self.name1)
         self.submit1 = Button(text = "Change",font_size = font_size)
+
         self.submit1.bind(on_press = partial(self.pressed,self.name1,var,select,'Lower Rate Limit'))
         self.add_widget(self.submit1)
 
@@ -127,7 +234,6 @@ class MyGrid(GridLayout):
             self.submit16 = Button(text = "Change",font_size = font_size)
             self.submit16.bind(on_press = partial(self.pressed,self.name16,var,select,'Maximum Sensor Rate'))
             self.add_widget(self.submit16)
-
 
         if(select == 5 or select == 10):
             self.add_widget(Label(text="Fixed AV Delay"))
@@ -210,13 +316,13 @@ class MyGrid(GridLayout):
             self.submit10.bind(on_press = partial(self.pressed,self.name10,var,select,'PVARP'))
             self.add_widget(self.submit10)
 
-        if(select == 3 or select == 4 or select == 8  or select == 9):
-            self.add_widget(Label(text="Hysteresis"))
-            self.name11 = TextInput(multiline=False)
-            self.add_widget(self.name11)
-            self.submit11 = Button(text = "Change",font_size = font_size)
-            self.submit11.bind(on_press = partial(self.pressed,self.name11,var,select,'Hysteresis'))
-            self.add_widget(self.submit11)
+        # if(select == 3 or select == 4 or select == 8  or select == 9):
+        #     self.add_widget(Label(text="Hysteresis"))
+        #     self.name11 = TextInput(multiline=False)
+        #     self.add_widget(self.name11)
+        #     self.submit11 = Button(text = "Change",font_size = font_size)
+        #     self.submit11.bind(on_press = partial(self.pressed,self.name11,var,select,'Hysteresis'))
+        #     self.add_widget(self.submit11)
 
         if(select == 3 or select == 4  or select == 8  or select == 9):
             self.add_widget(Label(text="Rate Smoothing"))
@@ -270,19 +376,16 @@ class MyGrid(GridLayout):
 
 
 
+        Connect()
 
-        self.add_widget(Label(text="Show "+var+" Parameters Values"))
+        self.add_widget(Label(text="Show "+var+" Parameters Values for " + name        + "\n                     "+connection))
         self.submitend = Button(text = "Values",font_size = font_size)
         self.submitend.bind(on_press = partial(self.Popup,var))
         self.add_widget(self.submitend)
 
-        Connect()
-        global connection
-        if(connection == 1): # this block shows the user if the pacemaker is connected or not
-            self.add_widget(Label(text="CONNECTED"))
-        else:
-            self.add_widget(Label(text="NOT CONNECTED"))
-
+        self.graph = Button(text = "E-GRAM",font_size = font_size)
+        self.graph.bind(on_press = startthread)
+        self.add_widget(self.graph)
 
     def __init__(self,**kwargs):
         super(MyGrid,self).__init__(**kwargs)
@@ -314,72 +417,76 @@ class MyGrid(GridLayout):
 
 ####################################################
 
-    def DOO(self,temp): # This is the AOO function
+    def DOO(self,temp): # This is the DOO function
         var = "DOO"
         self.para(var,5)
 ####################################################
 
-    def AOOR(self,temp): # This is the VOO function
+    def AOOR(self,temp): # This is the AOOR function
         var = "AOOR"
         self.para(var,6)
 ####################################################
-    def VOOR(self,temp): # this is the AAI function
+    def VOOR(self,temp): # this is the VOOR function
         var = "VOOR"
         self.para(var,7)
 ####################################################
-    def AAIR(self,temp): # this is the VVI function
+    def AAIR(self,temp): # this is the AAIR function
         var = "AAIR"
         self.para(var,8)
 ####################################################
 ####################################################
-    def VVIR(self,temp): # this is the VVI function
+    def VVIR(self,temp): # this is the VVIR function
         var = "VVIR"
         self.para(var,9)
 ####################################################
 ####################################################
-    def DOOR(self,temp): # this is the VVI function
+    def DOOR(self,temp): # this is the DOOR function
         var = "DOOR"
         self.para(var,10)
 ####################################################
 
 
 
-
     def pressed(self,instance,mode,select,var,temp3): # this function is invoked when the user presses any change button
         global user
-        strg = user + '\\' + mode+'.txt' # the path for the required file
-        f = open(strg, "r+")
-        lines = f.readlines()
-        i = 0
-        line=""
-        for line in lines: # this for loop finds where the requested parameter is located
+        global allpara
+        if(1==checkinput(self,var,instance.text,mode,temp3)):
+            allpara["mode"] = select
+            strg = user + '\\' + mode+'.txt' # the path for the required file
+            f = open(strg, "r+")
+            lines = f.readlines()
+            i = 0
+            line=""
+            for line in lines: # this for loop finds where the requested parameter is located
 
-            pos = line.find("(")
-            pos1 = line.find("\n")
-            line = line[:pos] + line[pos1+1:]
+                pos = line.find("(")
+                pos1 = line.find("\n")
+                line = line[:pos] + line[pos1+1:]
 
-            if(line == var):
-                break
-            else:
-                i = i + 1
-        line = line + "(" + instance.text + ")" + "\n" # the line gets the parameter inputed between the brackets
+                if(line == var):
+                    allpara[line] = float(instance.text)
+                    break
+                else:
+                    i = i + 1
+            line = line + "(" + instance.text + ")" + "\n" # the line gets the parameter inputed between the brackets
+            lines[i] = line
+            lines = ''.join(lines)
+            f.seek(0)
+            f.write(lines)# file gets overwritten with the new information
+            f.truncate()
+            f.close()
+            lines  =  ((re.findall('\(.*?\)',lines)))
+            for i in range(len(lines)):
+                temp = list(lines[i])
+                temp.pop(0)
+                temp.pop(-1)
+                temp = "".join(temp)
+                lines[i] = temp
+            lines.insert(0,str(select))
+            sendData()
+        else:
+            pass
 
-        lines[i] = line
-        lines = ''.join(lines)
-        f.seek(0)
-        f.write(lines)# file gets overwritten with the new information
-        f.truncate()
-        f.close()
-        lines  =  ((re.findall('\(.*?\)',lines)))
-        for i in range(len(lines)):
-            temp = list(lines[i])
-            temp.pop(0)
-            temp.pop(-1)
-            temp = "".join(temp)
-            lines[i] = temp
-        lines.insert(0,str(select))
-        for line in lines:
-             sendData(line)
 
 class MyApp(App):
     def build(self):
@@ -387,17 +494,241 @@ class MyApp(App):
 
 user = ""
 
-def sendData(data):
+
+def sendData():
+    global allpara
+    global allparaarray
+    SEND =bytes(0)
+    for i in allparaarray:
+        if(i == "Maximum Sensor Rate" or i =="Fixed AV Delay" or i ==  "VRP" or i == "ARP" or i == "PVARP"):
+            SEND += struct.pack("H",int(allpara[i]))
+        elif(i == "Atrial Pulse Width" or i == "Ventricular Pulse Width" or i == "Atrial Sensitivity" or i == "Ventricular Sensitivity" or i == "Atrial Amplitude" or i == "Ventricular Amplitude"):
+            SEND += struct.pack("f",float(allpara[i]))
+        else:
+            SEND += struct.pack("B",int(allpara[i]))
+        print(SEND)
     path = serial.Serial('COM4', 115200)
-    print(data)
-    path.write(data.encode())
-    print(data.encode())
+    path.write(SEND)
+def checkinput(self,variable,value,mode,temp3):
+    print("mode being changed is:",mode)
+    print("variable is:",variable)
+    print("value from user is:",str(type(value)))
 
-def main(info):
+    try:
+        value=float(value)
+    except:
+        pass
+
+    if variable =="Lower Rate Limit":
+        if str(type(value))=="<class 'str'>":
+            self.error(variable,temp3)
+            return -1
+        elif  50>=value>=30 or 175>=value>=90:
+            if value%5 !=0:
+                self.error(variable,temp3)
+                return -1
+        elif 90>=value>=50:
+            if value%1!=0:
+                self.error(variable,temp3)
+                return -1
+        else:
+            self.error(variable,temp3)
+            return -1
+
+    elif variable =="Upper Rate Limit":
+        if str(type(value))=="<class 'str'>":
+            self.error(variable,temp3)
+            return -1
+        elif  175>=value>=50:
+            if value%5 !=0:
+                self.error(variable,temp3)
+                return -1
+        else:
+            self.error(variable,temp3)
+            return -1
+    elif variable =="Atrial Amplitude":
+        if value=="Off":
+            pass
+        elif str(type(value))=="<class 'str'>":
+            self.error(variable,temp3)
+            return -1
+        elif 3.2>=value>=0.5:
+            if (value*10)%1 !=0 :
+                self.error(variable,temp3)
+                return -1
+        else:
+            self.error(variable,temp3)
+            return -1
+
+    elif variable =="Atrial Pulse Width":
+        if value==0.05:
+            pass
+        else:
+            self.error(variable,temp3)
+            return -1
+    elif variable =="Atrial Sensitivity":
+        if str(type(value))=="<class 'str'>":
+            self.error(variable,temp3)
+            return -1
+        elif 0.75>=value>=0.25:
+            if (value*100)%25!=0:
+                self.error(variable,temp3)
+                return -1
+        else:
+            self.error(variable,temp3)
+            return -1
+
+    elif variable =="ARP":
+        if str(type(value))=="<class 'str'>":
+            self.error(variable,temp3)
+            return -1
+        elif 500>=value>=150:
+            if value%10!=0:
+                self.error(variable,temp3)
+                return -1
+        else:
+            self.error(variable,temp3)
+            return -1
+    elif variable =="PVARP":
+        if str(type(value))=="<class 'str'>":
+            self.error(variable,temp3)
+            return -1
+        elif 500>=value>=150:
+            if value%10!=0:
+                self.error(variable,temp3)
+                return -1
+        else:
+            self.error(variable,temp3)
+            return -1
+    elif variable =="Rate Smoothing":
+        if value =="Off" or value==25:
+            pass
+        elif str(type(value))=="<class 'str'>":
+            self.error(variable,temp3)
+            return -1
+        elif 25>=value>=3:
+            if value%3!=0:
+                self.error(variable,temp3)
+                return -1
+        else:
+            self.error(variable,temp3)
+            return -1
+    elif variable =="Maximum Sensor Rate":
+        if str(type(value))=="<class 'str'>":
+            self.error(variable,temp3)
+            return -1
+        elif  175>=value>=50:
+            if value%5 !=0:
+                self.error(variable,temp3)
+                return -1
+        else:
+            self.error(variable,temp3)
+            return -1
+
+    elif variable =="Activity Threshold":
+        if value=="V-Low" or value=="Low" or value=="Med-Low" or value=="Med" or value=="Med-High" or value=="High" or value=="V-High":
+            pass
+        else:
+            self.error(variable,temp3)
+            return -1
+    elif variable =="Reaction Time":
+        if str(type(value))=="<class 'str'>":
+            self.error(variable,temp3)
+            return -1
+        elif 50>=value>=10:
+            if value%10!=0:
+                self.error(variable,temp3)
+                return -1
+        else:
+            self.error(variable,temp3)
+            return -1
+    elif variable =="Response Factor":
+        if str(type(value))=="<class 'str'>":
+            self.error(variable,temp3)
+            return -1
+        elif 16>=value>=1:
+            if value%1!=0:
+                self.error(variable,temp3)
+                return -1
+        else:
+            self.error(variable,temp3)
+            return -1
+    elif variable =="Recovery Time":
+        if str(type(value))=="<class 'str'>":
+            self.error(variable,temp3)
+            return -1
+        elif 16>=value>=2:
+            if value%1!=0:
+                self.error(variable,temp3)
+                return -1
+        else:
+            self.error(variable,temp3)
+            return -1
+
+    elif variable =="Ventricular Amplitude":
+        if str(type(value))=="<class 'str'>":
+            self.error(variable,temp3)
+            return -1
+        elif 7>=value>=3.5:
+            if (value*10)%5!=0:
+                self.error(variable,temp3)
+                return -1
+        else:
+            self.error(variable,temp3)
+            return -1
+    elif variable == "Ventricular Pulse Width":
+        if str(type(value))=="<class 'str'>":
+            self.error(variable,temp3)
+            return -1
+        elif 1.9>=value>=0.1:
+            if (value*10)%1!=0:
+                self.error(variable,temp3)
+                return -1
+        else:
+            self.error(variable,temp3)
+            return -1
+    elif variable =="Ventricular Sensitivity":
+        if str(type(value))=="<class 'str'>":
+            self.error(variable,temp3)
+            return -1
+        elif 10>=value>=1:
+            if (value*10)%5!=0:
+                self.error(variable,temp3)
+                return -1
+        else:
+            self.error(variable,temp3)
+            return -1
+    elif variable =="Fixed AV Delay":
+        if str(type(value))=="<class 'str'>":
+            self.error(variable,temp3)
+            return -1
+        elif 300>=value>=70:
+            if value%10!=0:
+                self.error(variable,temp3)
+                return -1
+        else:
+            self.error(variable,temp3)
+            return -1
+
+    elif variable =="VRP":
+        if str(type(value))=="<class 'str'>":
+            self.error(variable,temp3)
+            return -1
+        elif 500>=value>=150:
+            if value%10!=0:
+                self.error(variable,temp3)
+                return -1
+        else:
+            self.error(variable,temp3)
+            return -1
+    else:
+        return -1
+    return 1
+name = ""
+def main(namee,info):
     global user
+    global name
     user = info
-
+    name = namee
     print("this is",info)
     MyApp().run()
-
-main("MIKE")
