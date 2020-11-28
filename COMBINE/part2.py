@@ -30,6 +30,28 @@ b = [0]
 user = ""
 V = None
 counter = 0
+COM = 'COM3'
+
+try:
+    ser = serial.Serial()
+    ser.baudrate = 115200
+    ser.port = COM
+    ser.open()
+except:
+    pass
+
+def reMap(value, maxInput, minInput, maxOutput, minOutput):
+
+	value = maxInput if value > maxInput else value
+	value = minInput if value < minInput else value
+
+	inputSpan = maxInput - minInput
+	outputSpan = maxOutput - minOutput
+
+	scaledThrust = float(value - minInput) / float(inputSpan)
+
+	return minOutput + (scaledThrust * outputSpan)
+
 def startthreadA(self):
     global t1
     global V
@@ -51,26 +73,20 @@ def kill():
 
 def live(temp):
     global a,b,counter
-#    b.append(random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15))
-    path = serial.Serial('COM4', 115200)
-#    read_bytes = path.readline()
-    read_bytes = b'\x50\x00\x75\x63\x50\x00\x75\x63\x50\x00\x75\x63\x50\x00\x75\x63\x64'
+    read_bytes = ser.readline()
     a.pop(0)
     a.append(a[-1]+1)
-    if(len(read_bytes) == 17):
-        if(V == 1):
-            v = struct.unpack('d',bytes(read_bytes[0:8]))
-            pass
+    if len(read_bytes) == 17:
+        if V == 1:
+            v = struct.unpack('d',bytes(read_bytes[0:8]))[0]
         else:
-            pass
-            v = struct.unpack('d',bytes(read_bytes[8:16]))
-        #b.insert(counter,random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15))
-#        b.insert(counter,v[0])
-        b.insert(counter,random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15))
+            v = struct.unpack('d',bytes(read_bytes[8:16]))[0]
+        b.insert(counter,v)
         b.pop(0)
         counter = counter + 1
         plt.cla()
         plt.plot(a,b)
+        plt.ylim(0,1)
     else:
         pass
 
@@ -93,17 +109,16 @@ def graph():
 
 
 def Connect(): # function that deermines if the pace maker is connected or not
-    global connection
-    ser = serial
-    com = "COM4"
+    global connection,ser
     try:
-      ser = serial.Serial(com, 9600, timeout=.025) # the fn. waits for 1 second, if it cant find a connection it determines its not connected
+        ser.close()
 
-      while ser.read():
-        connection = "NOT CONNECTED"
+        ser.open()
 
-      connection = "CONNECTED"
-      ser.close()
+        if ser.is_open:
+            connection = "CONNECTED"
+        else:
+            connection = "NOT CONNECTED"
 
     except serial.serialutil.SerialException:
       connection = "NOT CONNECTED"
@@ -546,8 +561,8 @@ def sendData():
         else:
             SEND += struct.pack("B",int(allpara[i]))
         print(SEND)
-    path = serial.Serial('COM4', 115200)
-    path.write(SEND)
+    # path = serial.Serial(COM, 115200)
+    ser.write(SEND)
     sendDatastop()
 
 def sendDatastop():
