@@ -1,4 +1,4 @@
-Lower Rate Limit(60)
+Lower Rate Limit(86)
 Upper Rate Limit(120)
 Maximum Sensor Rate(120)
 Fixed AV Delay(150)

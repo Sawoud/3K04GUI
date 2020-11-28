@@ -53,8 +53,8 @@ def live(temp):
     global a,b,counter
 #    b.append(random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15))
     path = serial.Serial('COM4', 115200)
-    read_bytes = path.readline()
-#    read_bytes = b'\x50\x00\x75\x63\x50\x00\x75\x63\x50\x00\x75\x63\x50\x00\x75\x63\x64'
+#    read_bytes = path.readline()
+    read_bytes = b'\x50\x00\x75\x63\x50\x00\x75\x63\x50\x00\x75\x63\x50\x00\x75\x63\x64'
     a.pop(0)
     a.append(a[-1]+1)
     if(len(read_bytes) == 17):
@@ -65,7 +65,8 @@ def live(temp):
             pass
             v = struct.unpack('d',bytes(read_bytes[8:16]))
         #b.insert(counter,random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15))
-        b.insert(counter,v[0])
+#        b.insert(counter,v[0])
+        b.insert(counter,random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15))
         b.pop(0)
         counter = counter + 1
         plt.cla()
@@ -73,12 +74,13 @@ def live(temp):
     else:
         pass
 
+
 def graph():
     global a,b,counter
     for i in range(0,100):
         a.append((a[-1]+1)*10**(-3))
         b.append(0)
-    ani = FuncAnimation(plt.gcf(),live,interval = 1)
+    ani = FuncAnimation(plt.gcf(),live,interval = 10)
     plt.tight_layout()
     plt.show()
     plt.close()
@@ -518,7 +520,7 @@ class MyGrid(GridLayout):
             #     temp = "".join(temp)
             #     lines[i] = temp
             # lines.insert(0,str(select))
-            sendData()
+            sendDatathread()
         else:
             pass
 
@@ -527,6 +529,9 @@ class MyApp(App):
     def build(self):
         return MyGrid()
 
+def sendDatathread():
+    t2 = threading.Thread(target = sendData)
+    t2.start()
 
 
 def sendData():
@@ -543,6 +548,10 @@ def sendData():
         print(SEND)
     path = serial.Serial('COM4', 115200)
     path.write(SEND)
+    sendDatastop()
+
+def sendDatastop():
+    t2 = None
 
 def checkinput(self,variable,value,mode,temp3):
     print("mode being changed is:",mode)
