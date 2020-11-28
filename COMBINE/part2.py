@@ -18,42 +18,73 @@ from matplotlib.animation import FuncAnimation
 import random
 import sys
 # still have to do the displaying numbers onto the screen
-var2 = 0
 
 allparaog = {"mode":0,"Lower Rate Limit":0,"Upper Rate Limit":0,"Maximum Sensor Rate":0,"Fixed AV Delay":0,"Atrial Amplitude":0,"Atrial Pulse Width":0,"Ventricular Amplitude":0,"Ventricular Pulse Width":0,"Atrial Sensitivity":0,"VRP":0,"ARP":0,"PVARP":0,"Rate Smoothing":0,"Ventricular Sensitivity":0,"Activity Threshold":0,"Reaction Time":0,"Response Factor":0,"Recovery Time":0}
 allpara = {"mode":0,"Lower Rate Limit":0,"Upper Rate Limit":0,"Maximum Sensor Rate":0,"Fixed AV Delay":0,"Atrial Amplitude":0,"Atrial Pulse Width":0,"Ventricular Amplitude":0,"Ventricular Pulse Width":0,"Atrial Sensitivity":0,"VRP":0,"ARP":0,"PVARP":0,"Rate Smoothing":0,"Ventricular Sensitivity":0,"Activity Threshold":0,"Reaction Time":0,"Response Factor":0,"Recovery Time":0}
 allparaarray = ["mode","Lower Rate Limit","Upper Rate Limit","Maximum Sensor Rate","Fixed AV Delay","Atrial Amplitude","Atrial Pulse Width","Ventricular Amplitude","Ventricular Pulse Width","Atrial Sensitivity","VRP","ARP","PVARP","Rate Smoothing","Ventricular Sensitivity","Activity Threshold","Reaction Time","Response Factor","Recovery Time"]
-
-good = 1
 connection = ""
-
+name = ""
 font_size = 20
-def startthread(self):
+a = [0]
+b = [0]
+user = ""
+V = 0
+counter = 0
+def startthreadA(self):
     global t1
+    global V
+    V = 0
+    t1 = threading.Thread(target = graph)
+    t1.start()
+
+def startthreadV(self):
+    global t1
+    global V
+    V = 1
     t1 = threading.Thread(target = graph)
     t1.start()
 
 def kill():
     global t1
     t1 = None
-a = [0]
-b = [0]
 
-def animate(i):
-    global a,b
+
+def live(temp):
+    global a,b,counter
+#    b.append(random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15))
+    path = serial.Serial('COM4', 115200)
+    read_bytes = path.readline()
+#    read_bytes = b'\x50\x00\x75\x63\x50\x00\x75\x63\x50\x00\x75\x63\x50\x00\x75\x63\x64'
+    a.pop(0)
     a.append(a[-1]+1)
-    b.append(random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15))
-    plt.cla()
-    plt.plot(a,b)
+    if(len(read_bytes) == 17):
+        if(V == 1):
+            v = struct.unpack('d',bytes(read_bytes[0:8]))
+            pass
+        else:
+            pass
+            v = struct.unpack('d',bytes(read_bytes[8:16]))
+        #b.insert(counter,random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15))
+        b.insert(v)
+        b.pop(0)
+        counter = counter + 1
+        plt.cla()
+        plt.plot(a,b)
+    else:
+        pass
 
 def graph():
-    global a,b
-    ani = FuncAnimation(plt.gcf(),animate,interval =1000)
+    global a,b,counter
+    for i in range(0,100):
+        a.append((a[-1]+1)*10**(-3))
+        b.append(0)
+    ani = FuncAnimation(plt.gcf(),live,interval = 1)
     plt.tight_layout()
     plt.show()
     plt.close()
     a = [0]
     b = [0]
+    counter = 0
     kill()
 
 
@@ -383,9 +414,12 @@ class MyGrid(GridLayout):
         self.submitend.bind(on_press = partial(self.Popup,var))
         self.add_widget(self.submitend)
 
-        self.graph = Button(text = "E-GRAM",font_size = font_size)
-        self.graph.bind(on_press = startthread)
-        self.add_widget(self.graph)
+        self.graphv = Button(text = "E-GRAM Ventricular",font_size = font_size)
+        self.graphv.bind(on_press = startthreadV)
+        self.add_widget(self.graphv)
+        self.grapha = Button(text = "E-GRAM Atrial",font_size = font_size)
+        self.grapha.bind(on_press = startthreadA)
+        self.add_widget(self.grapha)
 
     def __init__(self,**kwargs):
         super(MyGrid,self).__init__(**kwargs)
@@ -475,14 +509,14 @@ class MyGrid(GridLayout):
             f.write(lines)# file gets overwritten with the new information
             f.truncate()
             f.close()
-            lines  =  ((re.findall('\(.*?\)',lines)))
-            for i in range(len(lines)):
-                temp = list(lines[i])
-                temp.pop(0)
-                temp.pop(-1)
-                temp = "".join(temp)
-                lines[i] = temp
-            lines.insert(0,str(select))
+            # lines  =  ((re.findall('\(.*?\)',lines)))
+            # for i in range(len(lines)):
+            #     temp = list(lines[i])
+            #     temp.pop(0)
+            #     temp.pop(-1)
+            #     temp = "".join(temp)
+            #     lines[i] = temp
+            # lines.insert(0,str(select))
             sendData()
         else:
             pass
@@ -492,7 +526,6 @@ class MyApp(App):
     def build(self):
         return MyGrid()
 
-user = ""
 
 
 def sendData():
@@ -503,7 +536,7 @@ def sendData():
         if(i == "Maximum Sensor Rate" or i =="Fixed AV Delay" or i ==  "VRP" or i == "ARP" or i == "PVARP"):
             SEND += struct.pack("H",int(allpara[i]))
         elif(i == "Atrial Pulse Width" or i == "Ventricular Pulse Width" or i == "Atrial Sensitivity" or i == "Ventricular Sensitivity" or i == "Atrial Amplitude" or i == "Ventricular Amplitude"):
-            SEND += struct.pack("f",float(allpara[i]))
+            SEND += struct.pack("d",float(allpara[i]))
         else:
             SEND += struct.pack("B",int(allpara[i]))
         print(SEND)
@@ -730,7 +763,7 @@ def checkinput(self,variable,value,mode,temp3):
     else:
         return -1
     return 1
-name = ""
+
 def main(namee,info):
     global user
     global name
@@ -738,3 +771,4 @@ def main(namee,info):
     name = namee
     print("this is",info)
     MyApp().run()
+main("mike","mike@mike.ca")
