@@ -185,7 +185,7 @@ class MyGrid(GridLayout):
         elif var =="Maximum Sensor Rate":
             text2=text2+"""Valid input range is 50-175ppm\n50-175 ppm with 5 ppm steps\nDO NOT INCLUDE THE UNITS"""
         elif var =="Activity Threshold":
-            text2=text2+"""Can only except the follow values 1-6:\n enter 1 for 'V-Low'\n enter 2 for' Low'\n enter 3 for 'Med-Low'\n enter 4 for 'Med'\n enter 5 for'Med-High'\n enter 6 for 'High'\n enter 7 for 'V-High'"""
+            text2=text2+"""Can only except the follow values 0-6:\n enter 0 for 'V-Low'\n enter 1 for' Low'\n enter 2 for 'Med-Low'\n enter 3 for 'Med'\n enter 4 for'Med-High'\n enter 5 for 'High'\n enter 6 for 'V-High'"""
         elif var =="Reaction Time":
             text2=text2+"Valid input range is 10-50sec\n10-50sec with 10sec steps\nDO NOT INCLUDE THE UNITS"
         elif var =="Response Factor":
@@ -630,7 +630,7 @@ def checkinput(self,variable,value,mode,temp3):
         if str(type(value))=="<class 'str'>":
             self.error(variable,temp3)
             return -1
-        elif 7>=value>=1:
+        elif 6>=value>=0:
             if value%1!=0:
                 self.error(variable,temp3)
                 return -1
