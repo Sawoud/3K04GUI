@@ -607,7 +607,7 @@ def checkinput(self,variable,value,mode,temp3):
         elif str(type(value))=="<class 'str'>":
             self.error(variable,temp3)
             return -1
-        elif 25>=value>=3:
+        elif 21>=value>=3:
             if value%3!=0:
                 self.error(variable,temp3)
                 return -1
