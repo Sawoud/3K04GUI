@@ -28,7 +28,7 @@ font_size = 20
 a = [0]
 b = [0]
 user = ""
-V = 0
+V = None
 counter = 0
 def startthreadA(self):
     global t1
@@ -65,7 +65,7 @@ def live(temp):
             pass
             v = struct.unpack('d',bytes(read_bytes[8:16]))
         #b.insert(counter,random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15))
-        b.insert(v)
+        b.insert(counter,v[0])
         b.pop(0)
         counter = counter + 1
         plt.cla()
@@ -85,6 +85,7 @@ def graph():
     a = [0]
     b = [0]
     counter = 0
+    V = None
     kill()
 
 
