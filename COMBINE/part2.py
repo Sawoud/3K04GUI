@@ -185,7 +185,7 @@ class MyGrid(GridLayout):
         elif var =="Maximum Sensor Rate":
             text2=text2+"""Valid input range is 50-175ppm\n50-175 ppm with 5 ppm steps\nDO NOT INCLUDE THE UNITS"""
         elif var =="Activity Threshold":
-            text2=text2+"Can only except the follow values:\n 'V-Low' , 'Low' , 'Med-Low' , 'Med' , 'Med-High' , 'High' , 'V-High'"""
+            text2=text2+"""Can only except the follow values 1-6:\n enter 1 for 'V-Low'\n enter 2 for' Low'\n enter 3 for 'Med-Low'\n enter 4 for 'Med'\n enter 5 for'Med-High'\n enter 6 for 'High'\n enter 7 for 'V-High'"""
         elif var =="Reaction Time":
             text2=text2+"Valid input range is 10-50sec\n10-50sec with 10sec steps\nDO NOT INCLUDE THE UNITS"
         elif var =="Response Factor":
@@ -509,6 +509,7 @@ def sendData():
         print(SEND)
     path = serial.Serial('COM4', 115200)
     path.write(SEND)
+
 def checkinput(self,variable,value,mode,temp3):
     print("mode being changed is:",mode)
     print("variable is:",variable)
@@ -626,8 +627,13 @@ def checkinput(self,variable,value,mode,temp3):
             return -1
 
     elif variable =="Activity Threshold":
-        if value=="V-Low" or value=="Low" or value=="Med-Low" or value=="Med" or value=="Med-High" or value=="High" or value=="V-High":
-            pass
+        if str(type(value))=="<class 'str'>":
+            self.error(variable,temp3)
+            return -1
+        elif 7>=value>=1:
+            if value%1!=0:
+                self.error(variable,temp3)
+                return -1
         else:
             self.error(variable,temp3)
             return -1
