@@ -127,7 +127,7 @@ def live(temp):
             plt.cla()
 
             plt.plot(a, b)
-            plt.plot(a, b2)
+            plt.plot(a, b2,color='red')
         #     v = struct.unpack('d',bytes(read_bytes[8:16]))[0]
 
         counter = counter + 1
