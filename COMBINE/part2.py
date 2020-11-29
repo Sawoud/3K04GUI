@@ -19,6 +19,8 @@ import random
 import sys
 # still have to do the displaying numbers onto the screen
 import time
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 allparaog = {"mode":0,"Lower Rate Limit":0,"Upper Rate Limit":0,"Maximum Sensor Rate":0,"Fixed AV Delay":0,"Atrial Amplitude":0,"Atrial Pulse Width":0,"Ventricular Amplitude":0,"Ventricular Pulse Width":0,"Atrial Sensitivity":0,"VRP":0,"ARP":0,"PVARP":0,"Rate Smoothing":0,"Ventricular Sensitivity":0,"Activity Threshold":0,"Reaction Time":0,"Response Factor":0,"Recovery Time":0}
 allpara = {"mode":0,"Lower Rate Limit":0,"Upper Rate Limit":0,"Maximum Sensor Rate":0,"Fixed AV Delay":0,"Atrial Amplitude":0,"Atrial Pulse Width":0,"Ventricular Amplitude":0,"Ventricular Pulse Width":0,"Atrial Sensitivity":0,"VRP":0,"ARP":0,"PVARP":0,"Rate Smoothing":0,"Ventricular Sensitivity":0,"Activity Threshold":0,"Reaction Time":0,"Response Factor":0,"Recovery Time":0}
@@ -71,18 +73,18 @@ def kill():
     global t1
     t1 = None
 
-done = 0
-elapsed = 0
+
 def live(temp):
-    global a,b,counter,done,elapsed
+    global a,b,counter
 #    read_bytes = ser.readline()
 
-    start = time.time()
-    elapsed = elapsed+(start-done)
-    done = time.time()
-    print(elapsed)
+    # start = datetime.now()
+    # t_diff = relativedelta(done, start)
+    # s=t_diff.seconds
+    # elapsed = elapsed-s
+    # print(elapsed)
     a.pop(0)
-    a.append(elapsed - 1606616)
+    a.append(a[-1]+(35/1000))
     if False:
         pass
     else:
@@ -99,13 +101,12 @@ def live(temp):
 
 
 
-
 def graph():
     global a,b,counter
     for i in range(0,40):
-        a.append((a[-1]+1))
+        a.append((a[-1]+(35/1000)))
         b.append(0)
-    ani = FuncAnimation(plt.gcf(),live,interval = 50)
+    ani = FuncAnimation(plt.gcf(),live,interval = 100)
     plt.tight_layout()
     plt.show()
     plt.close()
