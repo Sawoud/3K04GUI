@@ -33,9 +33,11 @@ a = [0]
 b = [0]
 user = ""
 V = None
+A = None
 counter = 0
 COM = 'COM4'
 t1 = None
+t4 = None
 
 try:
     ser = serial.Serial()
@@ -56,11 +58,11 @@ def reMap(value, maxInput, minInput, maxOutput, minOutput):
 	scaledThrust = float(value - minInput) / float(inputSpan)
 
 	return minOutput + (scaledThrust * outputSpan)
-
+A = None
 def startthreadA(self):
     global t1
-    global V
-    V = 0
+    global A
+    A = 1
     if(t1 == None):
         t1 = threading.Thread(target = graph)
         t1.start()
@@ -79,50 +81,77 @@ def startthreadV(self):
 
 def kill():
     global t1
+    A = None
+    V = None
     t1 = None
 
 
 def live(temp):
-    global a,b,counter
+    global a,b,b2,V,A,counter
 #    read_bytes = ser.readline()
 
-    # start = datetime.now()
-    # t_diff = relativedelta(done, start)
-    # s=t_diff.seconds
-    # elapsed = elapsed-s
-    # print(elapsed)
     a.pop(0)
     a.append(a[-1]+(35/1000))
     if False:
         pass
     else:
-        # if V == 1:
+        if (V == 1 and A == None):
+            print("V")
+            v = random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15)
+            b.insert(counter,v)
+            b.pop(0)
+            b2.insert(counter,0)
+            b2.pop(0)
+            plt.cla()
+            plt.plot(a,b)
         #     v = struct.unpack('d',bytes(read_bytes[0:8]))[0]
+        elif(A==1 and V == None):
+            print("A")
+            va = random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15)
+            b.insert(counter,0)
+            b.pop(0)
+            b2.insert(counter,va)
+            b2.pop(0)
+            plt.cla()
+            plt.plot(a, b2)
+        elif(A==1 and V == 1):
+            print("AV")
+            v = random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15)
+            va = random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15)
+            b.insert(counter,v)
+            b.pop(0)
+            b2.insert(counter,va)
+            b2.pop(0)
+            plt.plot(a, b)
+            plt.plot(a, b2)
+            plt.show()
         #     v = struct.unpack('d',bytes(read_bytes[8:16]))[0]
-        v = random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15)
-        b.insert(counter,v)
-        b.pop(0)
+
         counter = counter + 1
-        plt.cla()
-        plt.plot(a,b)
+
         # plt.ylim(-6,6)
 
 
-
+b2 = []
 def graph():
     global a,b,counter
+    global a,b,b2,V,A
     for i in range(0,100):
         a.append((a[-1]+(35/1000)))
         b.append(0)
+        b2.append(0)
     ani = FuncAnimation(plt.gcf(),live,interval = 100)
     plt.tight_layout()
     plt.show()
     plt.close()
     a = [0]
     b = [0]
+    b2 = [0]
     counter = 0
     V = None
+    A = None
     kill()
+
 
 
 
