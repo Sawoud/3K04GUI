@@ -352,7 +352,7 @@ class MyGrid(GridLayout):
             self.add_widget(self.submit15)
 
 
-        if(select == 1 or select == 3 or select == 6 or select == 8 or select == 10):
+        if(select == 1 or select == 3 or select == 6 or select ==5 or select == 8 or select == 10):
             self.add_widget(Label(text="Atrial Amplitude"))
             self.name3 = TextInput(multiline=False)
             self.add_widget(self.name3)
