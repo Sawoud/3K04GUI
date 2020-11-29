@@ -37,7 +37,7 @@ class CreateAccountWindow(Screen):
                     VVIRstring="Lower Rate Limit(60)\nUpper Rate Limit(120)\nMaximum Sensor Rate(120)\nVentricular Amplitude(3.5)\nVentricular Pulse Width(0.4)\nVRP(320)\nARP(250)\nRate Smoothing(off)\nVentricular Sensitivity(2.5)\nActivity Threshold(3)\nReaction Time(30)\nResponse Factor(8)\nRecovery Time(5)\n"
                     VOOstring="Lower Rate Limit(60)\nUpper Rate Limit(120)\nVentricular Amplitude(3.5)\nVentricular Pulse Width(0.4)\n"
                     VOORstring="Lower Rate Limit(60)\nUpper Rate Limit(120)\nMaximum Sensor Rate(120)\nVentricular Amplitude(3.5)\nVentricular Pulse Width(0.4)\nActivity Threshold(3)\nReaction Time(30)\nResponse Factor(8)\nRecovery Time(5)\n"
-                    DOOstring="Lower Rate Limit(60)\nUpper Rate Limit(120)\nFixed AV Delay(150)\nAtrial Pulse Width(0.05)\nVentricular Amplitude(3.5)\nVentricular Pulse Width(0.4)\n"
+                    DOOstring="Lower Rate Limit(60)\nUpper Rate Limit(120)\nFixed AV Delay(150)\nAtrial Amplitude(3.5)\nAtrial Pulse Width(0.05)\nVentricular Amplitude(3.5)\nVentricular Pulse Width(0.4)\n"
                     DOORstring="Lower Rate Limit(60)\nUpper Rate Limit(120)\nMaximum Sensor Rate(120)\nFixed AV Delay(150)\nAtrial Amplitude(3.5)\nAtrial Pulse Width(0.05)\nVentricular Amplitude(3.5)\nVentricular Pulse Width(0.4)\nActivity Threshold(3)\nReaction Time(30)\nResponse Factor(8)\nRecovery Time(5)\n"
 
                     with open(os.path.join(x,"AAI.txt"), "a") as fileopened:
