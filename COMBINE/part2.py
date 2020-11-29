@@ -629,4 +629,3 @@ def main(namee,info):
     name = namee
     print("this is",info)
     MyApp().run()
-main("mike","mike@mike.ca")
