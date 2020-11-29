@@ -8,6 +8,7 @@ from kivy.uix.button import Button
 from functools import partial
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.popup import Popup
+from Checkmodule import *
 import os.path
 import serial, struct
 import re
@@ -18,6 +19,9 @@ from matplotlib.animation import FuncAnimation
 import random
 import sys
 # still have to do the displaying numbers onto the screen
+import time
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 allparaog = {"mode":0,"Lower Rate Limit":0,"Upper Rate Limit":0,"Maximum Sensor Rate":0,"Fixed AV Delay":0,"Atrial Amplitude":0,"Atrial Pulse Width":0,"Ventricular Amplitude":0,"Ventricular Pulse Width":0,"Atrial Sensitivity":0,"VRP":0,"ARP":0,"PVARP":0,"Rate Smoothing":0,"Ventricular Sensitivity":0,"Activity Threshold":0,"Reaction Time":0,"Response Factor":0,"Recovery Time":0}
 allpara = {"mode":0,"Lower Rate Limit":0,"Upper Rate Limit":0,"Maximum Sensor Rate":0,"Fixed AV Delay":0,"Atrial Amplitude":0,"Atrial Pulse Width":0,"Ventricular Amplitude":0,"Ventricular Pulse Width":0,"Atrial Sensitivity":0,"VRP":0,"ARP":0,"PVARP":0,"Rate Smoothing":0,"Ventricular Sensitivity":0,"Activity Threshold":0,"Reaction Time":0,"Response Factor":0,"Recovery Time":0}
@@ -27,83 +31,145 @@ name = ""
 font_size = 20
 a = [0]
 b = [0]
+b2 = [0]
+
 user = ""
 V = None
+A = None
 counter = 0
+COM = 'COM3'
+t1 = None
+t4 = None
+
+try:
+    ser = serial.Serial()
+    ser.baudrate = 115200
+    ser.port = COM
+    ser.open()
+except:
+    pass
+
+def reMap(value, maxInput, minInput, maxOutput, minOutput):
+
+	value = maxInput if value > maxInput else value
+	value = minInput if value < minInput else value
+
+	inputSpan = maxInput - minInput
+	outputSpan = maxOutput - minOutput
+
+	scaledThrust = float(value - minInput) / float(inputSpan)
+
+	return minOutput + (scaledThrust * outputSpan)
+A = None
 def startthreadA(self):
     global t1
-    global V
-    V = 0
-    t1 = threading.Thread(target = graph)
-    t1.start()
+    global A
+    A = 1
+    if(t1 == None):
+        t1 = threading.Thread(target = graph)
+        t1.start()
+    else:
+        pass
 
 def startthreadV(self):
     global t1
     global V
     V = 1
-    t1 = threading.Thread(target = graph)
-    t1.start()
+    if(t1 == None):
+        t1 = threading.Thread(target = graph)
+        t1.start()
+    else:
+        pass
 
 def kill():
     global t1
+    A = None
+    V = None
     t1 = None
 
 
 def live(temp):
-    global a,b,counter
-#    b.append(random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15))
-    path = serial.Serial('COM4', 115200)
-#    read_bytes = path.readline()
-    read_bytes = b'\x50\x00\x75\x63\x50\x00\x75\x63\x50\x00\x75\x63\x50\x00\x75\x63\x64'
+    global a,b,b2,V,A,counter
+    read_bytes = ser.readline()
+
     a.pop(0)
-    a.append(a[-1]+1)
-    if(len(read_bytes) == 17):
-        if(V == 1):
-            v = struct.unpack('d',bytes(read_bytes[0:8]))
-            pass
-        else:
-            pass
-            v = struct.unpack('d',bytes(read_bytes[8:16]))
-        #b.insert(counter,random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15))
-#        b.insert(counter,v[0])
-        b.insert(counter,random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15))
-        b.pop(0)
-        counter = counter + 1
-        plt.cla()
-        plt.plot(a,b)
-    else:
-        pass
+    a.append(a[-1]+(35/1000))
+    if len(read_bytes) == 17:
+        if (V == 1 and A == None):
+            # print("V")
+            v = struct.unpack('d',bytes(read_bytes[0:8]))[0]
+            # v = random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15)
+            b.insert(counter,v)
+            b.pop(0)
+            b2.insert(counter,0)
+            b2.pop(0)
+            plt.cla()
+            plt.plot(a,b)
+            # v = struct.unpack('d',bytes(read_bytes[0:8]))[0]
+        elif(A==1 and V == None):
+            # print("A")
+            va = struct.unpack('d',bytes(read_bytes[8:16]))[0]
+            # va = random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15)
+            b.insert(counter,0)
+            b.pop(0)
+            b2.insert(counter,va)
+            b2.pop(0)
+            plt.cla()
+            plt.plot(a, b2)
+        elif(A==1 and V == 1):
+            # print("AV")
+            v = struct.unpack('d',bytes(read_bytes[0:8]))[0]
+            va = struct.unpack('d',bytes(read_bytes[8:16]))[0]
+            # v = random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15)
+            # va = random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15)
+            b.insert(counter,v)
+            b.pop(0)
+            b2.insert(counter,va)
+            b2.pop(0)
+            plt.cla()
+
+            plt.plot(a, b)
+            plt.plot(a, b2,color='red')
+        #     v = struct.unpack('d',bytes(read_bytes[8:16]))[0]
+
+    counter = counter + 1
+
+    plt.ylim(0,1)
 
 
 def graph():
     global a,b,counter
+    global a,b,b2,V,A
     for i in range(0,100):
-        a.append((a[-1]+1)*10**(-3))
+        a.append((a[-1]+(35/1000)))
         b.append(0)
+        b2.append(0)
     ani = FuncAnimation(plt.gcf(),live,interval = 10)
     plt.tight_layout()
     plt.show()
     plt.close()
     a = [0]
     b = [0]
+    b2 = [0]
     counter = 0
     V = None
+    A = None
     kill()
 
 
 
+
 def Connect(): # function that deermines if the pace maker is connected or not
-    global connection
-    ser = serial
-    com = "COM4"
+    global connection,ser
     try:
-      ser = serial.Serial(com, 9600, timeout=.025) # the fn. waits for 1 second, if it cant find a connection it determines its not connected
+        ser.close()
 
-      while ser.read():
-        connection = "NOT CONNECTED"
+        ser.open()
 
-      connection = "CONNECTED"
-      ser.close()
+        if ser.is_open:
+            connection = "CONNECTED"
+        else:
+            connection = "NOT CONNECTED"
 
     except serial.serialutil.SerialException:
       connection = "NOT CONNECTED"
@@ -286,7 +352,7 @@ class MyGrid(GridLayout):
             self.add_widget(self.submit15)
 
 
-        if(select == 1 or select == 3 or select == 6 or select == 8 or select == 10):
+        if(select == 1 or select == 3 or select == 6 or select ==5 or select == 8 or select == 10):
             self.add_widget(Label(text="Atrial Amplitude"))
             self.name3 = TextInput(multiline=False)
             self.add_widget(self.name3)
@@ -412,15 +478,17 @@ class MyGrid(GridLayout):
 
         Connect()
 
-        self.add_widget(Label(text="Show "+var+" Parameters Values for " + name        + "\n                     "+connection))
+        self.add_widget(Label(text="Show "+var+" Parameters Values"))
         self.submitend = Button(text = "Values",font_size = font_size)
         self.submitend.bind(on_press = partial(self.Popup,var))
         self.add_widget(self.submitend)
 
-        self.graphv = Button(text = "E-GRAM Ventricular",font_size = font_size)
+        self.graphv = Button(text = "Ventricle E-GRAM",font_size = font_size)
         self.graphv.bind(on_press = startthreadV)
         self.add_widget(self.graphv)
-        self.grapha = Button(text = "E-GRAM Atrial",font_size = font_size)
+        self.add_widget(Label(text=""+connection))
+        self.add_widget(Label(text="NAME: "+name))
+        self.grapha = Button(text = "Atrium E-GRAM",font_size = font_size)
         self.grapha.bind(on_press = startthreadA)
         self.add_widget(self.grapha)
 
@@ -546,233 +614,13 @@ def sendData():
         else:
             SEND += struct.pack("B",int(allpara[i]))
         print(SEND)
-    path = serial.Serial('COM4', 115200)
-    path.write(SEND)
+    # path = serial.Serial(COM, 115200)
+    ser.write(SEND)
     sendDatastop()
 
 def sendDatastop():
     t2 = None
 
-def checkinput(self,variable,value,mode,temp3):
-    print("mode being changed is:",mode)
-    print("variable is:",variable)
-    print("value from user is:",str(type(value)))
-
-    try:
-        value=float(value)
-    except:
-        pass
-
-    if variable =="Lower Rate Limit":
-        if str(type(value))=="<class 'str'>":
-            self.error(variable,temp3)
-            return -1
-        elif  50>=value>=30 or 175>=value>=90:
-            if value%5 !=0:
-                self.error(variable,temp3)
-                return -1
-        elif 90>=value>=50:
-            if value%1!=0:
-                self.error(variable,temp3)
-                return -1
-        else:
-            self.error(variable,temp3)
-            return -1
-
-    elif variable =="Upper Rate Limit":
-        if str(type(value))=="<class 'str'>":
-            self.error(variable,temp3)
-            return -1
-        elif  175>=value>=50:
-            if value%5 !=0:
-                self.error(variable,temp3)
-                return -1
-        else:
-            self.error(variable,temp3)
-            return -1
-    elif variable =="Atrial Amplitude":
-        if value=="Off":
-            pass
-        elif str(type(value))=="<class 'str'>":
-            self.error(variable,temp3)
-            return -1
-        elif 3.2>=value>=0.5:
-            if (value*10)%1 !=0 :
-                self.error(variable,temp3)
-                return -1
-        else:
-            self.error(variable,temp3)
-            return -1
-
-    elif variable =="Atrial Pulse Width":
-        if value==0.05:
-            pass
-        else:
-            self.error(variable,temp3)
-            return -1
-    elif variable =="Atrial Sensitivity":
-        if str(type(value))=="<class 'str'>":
-            self.error(variable,temp3)
-            return -1
-        elif 0.75>=value>=0.25:
-            if (value*100)%25!=0:
-                self.error(variable,temp3)
-                return -1
-        else:
-            self.error(variable,temp3)
-            return -1
-
-    elif variable =="ARP":
-        if str(type(value))=="<class 'str'>":
-            self.error(variable,temp3)
-            return -1
-        elif 500>=value>=150:
-            if value%10!=0:
-                self.error(variable,temp3)
-                return -1
-        else:
-            self.error(variable,temp3)
-            return -1
-    elif variable =="PVARP":
-        if str(type(value))=="<class 'str'>":
-            self.error(variable,temp3)
-            return -1
-        elif 500>=value>=150:
-            if value%10!=0:
-                self.error(variable,temp3)
-                return -1
-        else:
-            self.error(variable,temp3)
-            return -1
-    elif variable =="Rate Smoothing":
-        if value =="Off" or value==25:
-            pass
-        elif str(type(value))=="<class 'str'>":
-            self.error(variable,temp3)
-            return -1
-        elif 21>=value>=3:
-            if value%3!=0:
-                self.error(variable,temp3)
-                return -1
-        else:
-            self.error(variable,temp3)
-            return -1
-    elif variable =="Maximum Sensor Rate":
-        if str(type(value))=="<class 'str'>":
-            self.error(variable,temp3)
-            return -1
-        elif  175>=value>=50:
-            if value%5 !=0:
-                self.error(variable,temp3)
-                return -1
-        else:
-            self.error(variable,temp3)
-            return -1
-
-    elif variable =="Activity Threshold":
-        if str(type(value))=="<class 'str'>":
-            self.error(variable,temp3)
-            return -1
-        elif 6>=value>=0:
-            if value%1!=0:
-                self.error(variable,temp3)
-                return -1
-        else:
-            self.error(variable,temp3)
-            return -1
-    elif variable =="Reaction Time":
-        if str(type(value))=="<class 'str'>":
-            self.error(variable,temp3)
-            return -1
-        elif 50>=value>=10:
-            if value%10!=0:
-                self.error(variable,temp3)
-                return -1
-        else:
-            self.error(variable,temp3)
-            return -1
-    elif variable =="Response Factor":
-        if str(type(value))=="<class 'str'>":
-            self.error(variable,temp3)
-            return -1
-        elif 16>=value>=1:
-            if value%1!=0:
-                self.error(variable,temp3)
-                return -1
-        else:
-            self.error(variable,temp3)
-            return -1
-    elif variable =="Recovery Time":
-        if str(type(value))=="<class 'str'>":
-            self.error(variable,temp3)
-            return -1
-        elif 16>=value>=2:
-            if value%1!=0:
-                self.error(variable,temp3)
-                return -1
-        else:
-            self.error(variable,temp3)
-            return -1
-
-    elif variable =="Ventricular Amplitude":
-        if str(type(value))=="<class 'str'>":
-            self.error(variable,temp3)
-            return -1
-        elif 7>=value>=3.5:
-            if (value*10)%5!=0:
-                self.error(variable,temp3)
-                return -1
-        else:
-            self.error(variable,temp3)
-            return -1
-    elif variable == "Ventricular Pulse Width":
-        if str(type(value))=="<class 'str'>":
-            self.error(variable,temp3)
-            return -1
-        elif 1.9>=value>=0.1:
-            if (value*10)%1!=0:
-                self.error(variable,temp3)
-                return -1
-        else:
-            self.error(variable,temp3)
-            return -1
-    elif variable =="Ventricular Sensitivity":
-        if str(type(value))=="<class 'str'>":
-            self.error(variable,temp3)
-            return -1
-        elif 10>=value>=1:
-            if (value*10)%5!=0:
-                self.error(variable,temp3)
-                return -1
-        else:
-            self.error(variable,temp3)
-            return -1
-    elif variable =="Fixed AV Delay":
-        if str(type(value))=="<class 'str'>":
-            self.error(variable,temp3)
-            return -1
-        elif 300>=value>=70:
-            if value%10!=0:
-                self.error(variable,temp3)
-                return -1
-        else:
-            self.error(variable,temp3)
-            return -1
-
-    elif variable =="VRP":
-        if str(type(value))=="<class 'str'>":
-            self.error(variable,temp3)
-            return -1
-        elif 500>=value>=150:
-            if value%10!=0:
-                self.error(variable,temp3)
-                return -1
-        else:
-            self.error(variable,temp3)
-            return -1
-    else:
-        return -1
-    return 1
 
 def main(namee,info):
     global user
@@ -781,4 +629,3 @@ def main(namee,info):
     name = namee
     print("this is",info)
     MyApp().run()
-main("mike","mike@mike.ca")
