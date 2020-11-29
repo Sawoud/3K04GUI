@@ -34,6 +34,7 @@ user = ""
 V = None
 counter = 0
 COM = 'COM4'
+t1 = None
 
 try:
     ser = serial.Serial()
@@ -59,15 +60,21 @@ def startthreadA(self):
     global t1
     global V
     V = 0
-    t1 = threading.Thread(target = graph)
-    t1.start()
+    if(t1 == None):
+        t1 = threading.Thread(target = graph)
+        t1.start()
+    else:
+        pass
 
 def startthreadV(self):
     global t1
     global V
     V = 1
-    t1 = threading.Thread(target = graph)
-    t1.start()
+    if(t1 == None):
+        t1 = threading.Thread(target = graph)
+        t1.start()
+    else:
+        pass
 
 def kill():
     global t1
