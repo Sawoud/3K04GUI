@@ -103,7 +103,7 @@ def live(temp):
 
 def graph():
     global a,b,counter
-    for i in range(0,40):
+    for i in range(0,100):
         a.append((a[-1]+(35/1000)))
         b.append(0)
     ani = FuncAnimation(plt.gcf(),live,interval = 100)

@@ -1,4 +1,4 @@
-Lower Rate Limit(60)
+Lower Rate Limit(54)
 Upper Rate Limit(120)
 Fixed AV Delay(150)
 Atrial Pulse Width(0.4)
