@@ -444,6 +444,8 @@ class MyGrid(GridLayout):
         self.graphv = Button(text = "E-GRAM Ventricular",font_size = font_size)
         self.graphv.bind(on_press = startthreadV)
         self.add_widget(self.graphv)
+        self.add_widget(Label(text=""))
+        self.add_widget(Label(text=""))
         self.grapha = Button(text = "E-GRAM Atrial",font_size = font_size)
         self.grapha.bind(on_press = startthreadA)
         self.add_widget(self.grapha)
