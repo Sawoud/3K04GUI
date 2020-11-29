@@ -31,6 +31,8 @@ name = ""
 font_size = 20
 a = [0]
 b = [0]
+b2 = [0]
+
 user = ""
 V = None
 A = None
@@ -122,9 +124,10 @@ def live(temp):
             b.pop(0)
             b2.insert(counter,va)
             b2.pop(0)
+            plt.cla()
+
             plt.plot(a, b)
             plt.plot(a, b2)
-            plt.show()
         #     v = struct.unpack('d',bytes(read_bytes[8:16]))[0]
 
         counter = counter + 1
@@ -132,7 +135,6 @@ def live(temp):
         # plt.ylim(-6,6)
 
 
-b2 = []
 def graph():
     global a,b,counter
     global a,b,b2,V,A
