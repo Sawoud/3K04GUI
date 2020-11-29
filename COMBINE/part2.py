@@ -37,7 +37,7 @@ user = ""
 V = None
 A = None
 counter = 0
-COM = 'COM4'
+COM = 'COM3'
 t1 = None
 t4 = None
 
@@ -90,26 +90,26 @@ def kill():
 
 def live(temp):
     global a,b,b2,V,A,counter
-#    read_bytes = ser.readline()
+    read_bytes = ser.readline()
 
     a.pop(0)
     a.append(a[-1]+(35/1000))
-    if False:
-        pass
-    else:
+    if len(read_bytes) == 17:
         if (V == 1 and A == None):
-            print("V")
-            v = random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15)
+            # print("V")
+            v = struct.unpack('d',bytes(read_bytes[0:8]))[0]
+            # v = random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15)
             b.insert(counter,v)
             b.pop(0)
             b2.insert(counter,0)
             b2.pop(0)
             plt.cla()
             plt.plot(a,b)
-        #     v = struct.unpack('d',bytes(read_bytes[0:8]))[0]
+            # v = struct.unpack('d',bytes(read_bytes[0:8]))[0]
         elif(A==1 and V == None):
-            print("A")
-            va = random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15)
+            # print("A")
+            va = struct.unpack('d',bytes(read_bytes[8:16]))[0]
+            # va = random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15)
             b.insert(counter,0)
             b.pop(0)
             b2.insert(counter,va)
@@ -117,9 +117,11 @@ def live(temp):
             plt.cla()
             plt.plot(a, b2)
         elif(A==1 and V == 1):
-            print("AV")
-            v = random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15)
-            va = random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15)
+            # print("AV")
+            v = struct.unpack('d',bytes(read_bytes[0:8]))[0]
+            va = struct.unpack('d',bytes(read_bytes[8:16]))[0]
+            # v = random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15)
+            # va = random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15)
             b.insert(counter,v)
             b.pop(0)
             b2.insert(counter,va)
@@ -130,9 +132,9 @@ def live(temp):
             plt.plot(a, b2,color='red')
         #     v = struct.unpack('d',bytes(read_bytes[8:16]))[0]
 
-        counter = counter + 1
+    counter = counter + 1
 
-        # plt.ylim(-6,6)
+    plt.ylim(0,1)
 
 
 def graph():
@@ -142,7 +144,7 @@ def graph():
         a.append((a[-1]+(35/1000)))
         b.append(0)
         b2.append(0)
-    ani = FuncAnimation(plt.gcf(),live,interval = 100)
+    ani = FuncAnimation(plt.gcf(),live,interval = 10)
     plt.tight_layout()
     plt.show()
     plt.close()
