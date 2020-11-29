@@ -18,6 +18,7 @@ from matplotlib.animation import FuncAnimation
 import random
 import sys
 # still have to do the displaying numbers onto the screen
+import time
 
 allparaog = {"mode":0,"Lower Rate Limit":0,"Upper Rate Limit":0,"Maximum Sensor Rate":0,"Fixed AV Delay":0,"Atrial Amplitude":0,"Atrial Pulse Width":0,"Ventricular Amplitude":0,"Ventricular Pulse Width":0,"Atrial Sensitivity":0,"VRP":0,"ARP":0,"PVARP":0,"Rate Smoothing":0,"Ventricular Sensitivity":0,"Activity Threshold":0,"Reaction Time":0,"Response Factor":0,"Recovery Time":0}
 allpara = {"mode":0,"Lower Rate Limit":0,"Upper Rate Limit":0,"Maximum Sensor Rate":0,"Fixed AV Delay":0,"Atrial Amplitude":0,"Atrial Pulse Width":0,"Ventricular Amplitude":0,"Ventricular Pulse Width":0,"Atrial Sensitivity":0,"VRP":0,"ARP":0,"PVARP":0,"Rate Smoothing":0,"Ventricular Sensitivity":0,"Activity Threshold":0,"Reaction Time":0,"Response Factor":0,"Recovery Time":0}
@@ -30,7 +31,7 @@ b = [0]
 user = ""
 V = None
 counter = 0
-COM = 'COM3'
+COM = 'COM4'
 
 try:
     ser = serial.Serial()
@@ -70,33 +71,41 @@ def kill():
     global t1
     t1 = None
 
-
+done = 0
+elapsed = 0
 def live(temp):
-    global a,b,counter
-    read_bytes = ser.readline()
+    global a,b,counter,done,elapsed
+#    read_bytes = ser.readline()
+
+    start = time.time()
+    elapsed = elapsed+(start-done)
+    done = time.time()
+    print(elapsed)
     a.pop(0)
-    a.append(a[-1]+1)
-    if len(read_bytes) == 17:
-        if V == 1:
-            v = struct.unpack('d',bytes(read_bytes[0:8]))[0]
-        else:
-            v = struct.unpack('d',bytes(read_bytes[8:16]))[0]
+    a.append(elapsed - 1606616)
+    if False:
+        pass
+    else:
+        # if V == 1:
+        #     v = struct.unpack('d',bytes(read_bytes[0:8]))[0]
+        #     v = struct.unpack('d',bytes(read_bytes[8:16]))[0]
+        v = random.randint(0, 10)+random.randint(0, 10)-random.randint(0, 15)
         b.insert(counter,v)
         b.pop(0)
         counter = counter + 1
         plt.cla()
         plt.plot(a,b)
-        plt.ylim(0,1)
-    else:
-        pass
+        # plt.ylim(-6,6)
+
+
 
 
 def graph():
     global a,b,counter
-    for i in range(0,100):
-        a.append((a[-1]+1)*10**(-3))
+    for i in range(0,40):
+        a.append((a[-1]+1))
         b.append(0)
-    ani = FuncAnimation(plt.gcf(),live,interval = 10)
+    ani = FuncAnimation(plt.gcf(),live,interval = 50)
     plt.tight_layout()
     plt.show()
     plt.close()
