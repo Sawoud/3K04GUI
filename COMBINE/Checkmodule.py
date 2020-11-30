@@ -93,7 +93,7 @@ def checkinput(self,variable,value,mode,temp3):
             self.error(variable,temp3)
             return -1
     elif variable =="Rate Smoothing":
-        if value =="Off" or value==25:
+        if value ==0 or value==25:
             pass
         elif str(type(value))=="<class 'str'>":
             self.error(variable,temp3)
