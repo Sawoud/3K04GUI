@@ -281,7 +281,7 @@ class MyGrid(GridLayout):
         elif var =="PVARP":
             text2=text2+"""Valid input range is 150-500ms\n150-500 ms with 10ms steps\nDO NOT INCLUDE THE UNITS"""
         elif var =="Rate Smoothing":
-            text2=text2+"""Valid input range is 3-25%\n3-25% with 3% steps\nDO NOT INCLUDE THE %"""
+            text2=text2+"""Valid input range is 3-25% or 0 to turn off Rate smoothing\n3-25% with 3% steps\n 0 TURNS OFF\nDO NOT INCLUDE THE %"""
         elif var =="Maximum Sensor Rate":
             text2=text2+"""Valid input range is 50-175ppm\n50-175 ppm with 5 ppm steps\nDO NOT INCLUDE THE UNITS"""
         elif var =="Activity Threshold":
